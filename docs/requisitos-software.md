@@ -26,7 +26,7 @@ Nesta versão inicial, o documento não pretende descrever todos os fluxos, regr
 - **Professor da disciplina:** responsável por avaliação e acompanhamento acadêmico.
 
 ## 6. Requisitos Funcionais
-- **RF-01:** o sistema deve permitir o cadastro de.
+- **RF-01:** o sistema deve permitir o cadastro de alunos.
 - **RF-02:** o sistema deve permitir o login de alunos cadastrados.
 - **RF-03:** o sistema deve permitir o cadastro de empresas ou organizações concedentes.
 - **RF-04:** o sistema deve permitir o login de empresas cadastradas.
