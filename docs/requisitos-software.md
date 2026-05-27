@@ -38,6 +38,7 @@ Nesta versão inicial, o documento não pretende descrever todos os fluxos, regr
 - **RF-10:** o sistema deve permitir que alunos filtrem vagas por critérios como área, modalidade, localidade ou carga horária.
 - **RF-11:** o sistema deve permitir que alunos manifestem interesse ou se candidatem a uma vaga.
 - **RF-12:** o sistema deve permitir que empresas visualizem alunos interessados em suas vagas.
+- **RF-13:** o sistema deve permitir que os alunos salvem vagas para consulta posterior.
 
 ## 7. Requisitos Não Funcionais
 - **RNF-01:** a plataforma deve ser acessível por navegador web.
@@ -54,6 +55,7 @@ Nesta versão inicial, o documento não pretende descrever todos os fluxos, regr
 - **RN-02:** alunos devem estar cadastrados para manifestar interesse em uma vaga.
 - **RN-03:** uma vaga deve conter informações mínimas para publicação, como título, descrição, área, modalidade e dados da organização.
 - **RN-04:** cada empresa deve gerenciar apenas as vagas cadastradas por ela.
+- **RN-05:** alunos não devem poder se candidatar mais de uma vez para a mesma vaga.
 
 ## 9. Organização Recomendada do Repositório
 ```text
