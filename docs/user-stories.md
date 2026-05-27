@@ -96,5 +96,15 @@ Este documento registra histórias de usuário iniciais para orientar a implemen
 - O sistema deve listar os alunos interessados por vaga.
 - A listagem deve apresentar informações básicas necessárias para contato ou análise futura.
 
+### US-10 - Salvamento de vagas
+**Como** aluno,  
+**quero** salvar vagas de interesse,  
+**para** acessá-las posteriormente com facilidade.
+
+**Critérios de aceitação:**
+- O aluno deve estar autenticado para salvar vagas.
+- O sistema deve permitir visualizar vagas salvas anteriormente.
+- O sistema deve evitar salvar a mesma vaga mais de uma vez para o mesmo aluno.
+
 ## 3. Observações
 As histórias descritas são uma base inicial. A equipe poderá incluir novas histórias, alterar prioridades e detalhar fluxos conforme a definição das tecnologias e regras de negócio.
