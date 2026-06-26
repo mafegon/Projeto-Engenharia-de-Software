@@ -1,5 +1,5 @@
 # 📐 Diagrama de Classes do Projeto Integrador 
-Foi criado o diagrama do sistema de classes, utiliado o draw.io, exportado como pdf.
+Foi criado o diagrama do sistema de classes, utilizado o draw.io, exportado como pdf.
 
 # Justificativa da Composição (Empresa ◆ Vaga)
 
