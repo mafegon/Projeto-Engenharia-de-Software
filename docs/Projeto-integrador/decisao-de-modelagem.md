@@ -1,0 +1,11 @@
+# Justificativa das Decisões de Modelagem
+
+O diagrama de classes foi desenvolvido para representar a estrutura do sistema de gerenciamento de vagas de estágio de forma organizada e de fácil manutenção.
+
+Foi utilizada a **herança** entre as classes `Usuário`, `Aluno` e `Empresa`, pois tanto alunos quanto empresas compartilham informações básicas, como id, nome, e-mail e senha, mas possuem funcionalidades específicas.
+
+A classe `Vaga` foi criada para armazenar todas as informações referentes às oportunidades publicadas pelas empresas. Já a classe `Candidatura` representa o processo de inscrição de um aluno em uma vaga, registrando informações como data, status e currículo.
+
+A classe `Salvamento_Vaga` foi modelada separadamente para permitir que os alunos salvem vagas de interesse, adicionem observações e marquem vagas como favoritas, mantendo essa funcionalidade independente do processo de candidatura.
+
+As associações e multiplicidades foram definidas para refletir os relacionamentos do sistema, permitindo que uma empresa publique várias vagas, que um aluno possa realizar diversas candidaturas e salvar diferentes vagas. Essa modelagem promove reutilização de código, reduz redundâncias e facilita futuras manutenções e expansões do sistema.
