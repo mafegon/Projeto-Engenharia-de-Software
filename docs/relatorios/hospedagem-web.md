@@ -4,6 +4,16 @@
 
 Disponibilizar a aplicação por um endereço HTTPS público, sem exigir que o usuário instale Python, Django ou Tailwind CSS e sem depender de um computador local ligado. Nesta fase não há banco de dados.
 
+## Estado publicado
+
+- **URL pública:** https://projeto-estagios.onrender.com
+- **Serviço:** `projeto-estagios`, plano gratuito do Render
+- **Código:** branch `main` de `mafegon/Projeto-Engenharia-de-Software`
+- **Health check:** https://projeto-estagios.onrender.com/health/
+- **Persistência:** memória do único processo Gunicorn, sem banco
+
+O deploy foi validado com health check, quatro telas, CSS e JavaScript versionados pelo WhiteNoise e o fluxo de cadastro, perfil, favorito e candidatura. Os dados usados na validação são fictícios e podem desaparecer quando o serviço reiniciar ou sair de suspensão.
+
 ## 2. Arquitetura
 
 ```text
