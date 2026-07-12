@@ -22,6 +22,57 @@ O objetivo deste projeto é desenvolver uma plataforma web capaz de unificar os 
 
 Django concentra as páginas, autenticação, regras de negócio e acesso a dados. O Tailwind CSS será integrado ao projeto pelo `django-tailwind`. Esta é a definição tecnológica oficial do projeto.
 
+## ☁️ Hospedagem web atual
+
+- **Código e integração:** GitHub.
+- **Aplicação Django:** Render Web Service.
+- **Persistência nesta fase:** memória do processo, sem banco de dados.
+- **Banco futuro:** PostgreSQL no Supabase, após entrega e aprovação da equipe de banco.
+- **Arquivos estáticos:** WhiteNoise no serviço Django.
+
+Depois do deploy, o sistema pode ser acessado pelo endereço HTTPS público do Render sem manter um computador local ligado. Nesta fase, `DATABASES = {}` e os cadastros, tokens, favoritos, candidaturas e alterações de perfil ficam somente na memória do processo. Eles podem desaparecer a qualquer reinício, novo deploy ou suspensão do serviço. Não use dados pessoais ou credenciais reais.
+
+O plano gratuito do Render pode suspender o serviço por inatividade. O primeiro acesso após a suspensão pode levar algum tempo enquanto a instância inicia novamente (cold start).
+
+## 💻 Preparação local
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python backend\manage.py check
+python backend\manage.py tailwind build
+python backend\manage.py runserver
+```
+
+O ambiente atual não usa SQLite, PostgreSQL ou Supabase: `DATABASES = {}`. A equipe de banco é responsável pelo futuro projeto Supabase, pelo schema e pela aprovação das migrations.
+
+## 🔐 Variáveis de ambiente
+
+Copie `.env.example` apenas como referência e configure as variáveis no sistema operacional ou no painel do Render:
+
+- `DJANGO_SECRET_KEY`;
+- `DJANGO_DEBUG`;
+- `DJANGO_SECURE_HSTS_SECONDS`;
+- `RUN_MIGRATIONS`.
+
+No Render, o hostname externo é incorporado automaticamente por `RENDER_EXTERNAL_HOSTNAME`. `DATABASE_URL` permanece comentada em `.env.example` apenas como contrato de integração futura. Nunca publique senha de banco nem chave `service_role`.
+
+## ✅ Rotas e validação
+
+- `/`: login e cadastro;
+- `/vagas/`: consulta e filtros de vagas;
+- `/vagas/<slug>/`: detalhes, favorito e candidatura;
+- `/perfil/`: perfil do aluno;
+- `/backend-status/`: estado técnico da API;
+- `/api/v1/`: API HTTP;
+- `/health/`: verificação de saúde usada pelo Render.
+
+```powershell
+python backend\manage.py check
+python backend\manage.py test
+```
+
 ### 📋 Requisitos Funcionais
 - **RF-01:** permitir o cadastro e autenticação de alunos interessados em vagas de estágio.
 - **RF-02:** permitir o cadastro e autenticação de empresas ou organizações concedentes.
@@ -44,4 +95,5 @@ Django concentra as páginas, autenticação, regras de negócio e acesso a dado
 - [Documento de Requisitos de Software](docs/relatorios/requisitos-software.md)
 - [Documento de Visão](docs/relatorios/documento-visao.md)
 - [User Stories e Critérios de Aceitação](docs/relatorios/user-stories.md)
+- [Hospedagem web no Render e integração futura com Supabase](docs/relatorios/hospedagem-web.md)
 - [Guia de contribuição e padrão obrigatório de commits](CONTRIBUTING.md)
