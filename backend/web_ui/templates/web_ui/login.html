@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login e Cadastro — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased flex items-center justify-center p-8">
+
+  <div class="w-[980px] max-w-full bg-white border border-slate-200 rounded-[20px] shadow-2xl shadow-slate-900/10 grid grid-cols-2 overflow-hidden">
+
+    <!-- Coluna do formulário -->
+    <div class="p-11 flex flex-col gap-6">
+      <div class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight">Estágios Acadêmicos</span>
+      </div>
+
+      <div>
+        <h1 class="text-[26px] font-extrabold tracking-tight">Bem-vindo(a), aluno(a)</h1>
+        <p class="mt-1.5 text-sm text-slate-500 leading-relaxed">Encontre vagas de estágio compatíveis com o seu curso.</p>
+      </div>
+
+      <!-- Abas -->
+      <div class="flex gap-1 bg-slate-100 rounded-[10px] p-1">
+        <button id="tab-entrar" type="button" class="flex-1 h-[42px] rounded-lg font-bold text-sm bg-white text-blue-700 shadow-sm" onclick="mostrarAba('entrar')">Entrar</button>
+        <button id="tab-cadastro" type="button" class="flex-1 h-[42px] rounded-lg font-bold text-sm text-slate-500" onclick="mostrarAba('cadastro')">Criar conta</button>
+      </div>
+
+      <!-- Painel: Entrar -->
+      <form id="painel-entrar" class="flex flex-col gap-4">
+        <div>
+          <label for="login-email" class="block text-[13px] font-semibold text-slate-700 mb-1.5">E-mail</label>
+          <input id="login-email" name="email" type="email" required autocomplete="email" placeholder="voce@unifap.br" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label for="login-password" class="text-[13px] font-semibold text-slate-700">Senha</label>
+            <a id="esqueci-senha" href="#" class="text-xs font-semibold text-blue-700 hover:text-blue-800">Esqueci minha senha</a>
+          </div>
+          <input id="login-password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <button type="submit" class="flex items-center justify-center h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Entrar</button>
+      </form>
+
+      <!-- Painel: Cadastro -->
+      <form id="painel-cadastro" class="hidden flex-col gap-4">
+        <div>
+          <label for="cadastro-nome" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Nome completo</label>
+          <input id="cadastro-nome" name="full_name" type="text" required autocomplete="name" placeholder="Seu nome completo" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="cadastro-curso" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Curso</label>
+            <select id="cadastro-curso" name="course_code" required class="w-full h-11 border border-slate-300 rounded-[10px] px-2.5 text-sm bg-white outline-none focus:border-blue-700">
+              <option value="">Selecione</option>
+            </select>
+          </div>
+          <div>
+            <label for="cadastro-matricula" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Matrícula</label>
+            <input id="cadastro-matricula" name="registration" type="text" required inputmode="numeric" placeholder="2026xxxxx" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+          </div>
+        </div>
+        <div>
+          <label for="cadastro-email" class="block text-[13px] font-semibold text-slate-700 mb-1.5">E-mail institucional</label>
+          <input id="cadastro-email" name="email" type="email" required autocomplete="email" placeholder="voce@unifap.br" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="cadastro-password" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Senha</label>
+          <input id="cadastro-password" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <button type="submit" class="flex items-center justify-center h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Criar conta</button>
+      </form>
+
+      <p class="text-xs text-slate-400 leading-relaxed">Ao continuar, você concorda com os termos de uso da plataforma.</p>
+    </div>
+
+    <!-- Coluna da imagem -->
+    <div class="relative bg-slate-100 min-h-[560px] flex items-center justify-center">
+      <span class="font-mono text-xs text-slate-400 text-center px-8">Imagem institucional<br>(campus / alunos)</span>
+    </div>
+
+  </div>
+
+<script src="/static/web_ui/api.js"></script>
+<script>
+function mostrarAba(aba) {
+  const entrar = aba === 'entrar';
+  document.getElementById('painel-entrar').classList.toggle('hidden', !entrar);
+  document.getElementById('painel-cadastro').classList.toggle('hidden', entrar);
+  document.getElementById('painel-cadastro').classList.toggle('flex', !entrar);
+  document.getElementById('tab-entrar').className = 'flex-1 h-[42px] rounded-lg font-bold text-sm ' + (entrar ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500');
+  document.getElementById('tab-cadastro').className = 'flex-1 h-[42px] rounded-lg font-bold text-sm ' + (!entrar ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500');
+}
+
+function nextPage() {
+  const next = new URLSearchParams(window.location.search).get('next');
+  return next && next.startsWith('/') && !next.startsWith('//') ? next : '/vagas/';
+}
+
+async function carregarCursos() {
+  try {
+    const cursos = await Platform.request('/api/v1/courses/');
+    const select = document.getElementById('cadastro-curso');
+    cursos.forEach((curso) => select.insertAdjacentHTML('beforeend', `<option value="${curso.code}">${curso.name}</option>`));
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+document.getElementById('painel-entrar').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  try {
+    const session = await Platform.request('/api/v1/auth/login/', {method: 'POST', body: JSON.stringify(Object.fromEntries(form))});
+    Platform.storeSession(session);
+    window.location.assign(nextPage());
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+document.getElementById('painel-cadastro').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  try {
+    const session = await Platform.request('/api/v1/auth/register/', {method: 'POST', body: JSON.stringify(Object.fromEntries(form))});
+    Platform.storeSession(session);
+    window.location.assign(nextPage());
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+document.getElementById('esqueci-senha').addEventListener('click', async (event) => {
+  event.preventDefault();
+  const email = document.getElementById('login-email').value || prompt('Informe seu e-mail institucional:');
+  if (!email) return;
+  try {
+    const result = await Platform.request('/api/v1/auth/password-reset/', {method: 'POST', body: JSON.stringify({email})});
+    alert(result.message);
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+carregarCursos();
+</script>
+</body>
+</html>
