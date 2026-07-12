@@ -1,8 +1,19 @@
-from django.test import SimpleTestCase
+from django.templatetags.static import static
+from django.test import SimpleTestCase, override_settings
 from django.urls import resolve, reverse
 
 
 class WebUiRouteTests(SimpleTestCase):
+    @override_settings(DEBUG=False)
+    def test_pages_use_manifest_versioned_api_script_in_production(self):
+        script_url = static("web_ui/api.js")
+        self.assertRegex(script_url, r"^/static/web_ui/api\.[0-9a-f]{12}\.js$")
+
+        for path in ("/", "/vagas/", "/vagas/prodap/", "/perfil/"):
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                self.assertContains(response, f'<script src="{script_url}"></script>')
+
     def test_public_login_and_registration_page(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
