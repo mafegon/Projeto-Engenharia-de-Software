@@ -41,7 +41,7 @@ Django concentra as páginas, autenticação, regras de negócio e acesso a dado
 - **RNF-06:** a plataforma deve permitir evolução futura para novos perfis, filtros e fluxos de candidatura.
 
 ## 📁 Documentação
-- [Documento de Requisitos de Software](docs/relatorios/requisitos-software.md)
-- [Documento de Visão](docs/relatorios/documento-visao.md)
-- [User Stories e Critérios de Aceitação](docs/relatorios/user-stories.md)
+- [Relatórios](docs/relatorios)
+- [Modelagem](docs/modelagem)
 - [Guia de contribuição e padrão obrigatório de commits](CONTRIBUTING.md)
+
