@@ -44,3 +44,4 @@ Django concentra as páginas, autenticação, regras de negócio e acesso a dado
 - [Documento de Requisitos de Software](docs/requisitos-software.md)
 - [Documento de Visão](docs/documento-visao.md)
 - [User Stories e Critérios de Aceitação](docs/user-stories.md)
+- [Guia de contribuição e padrão obrigatório de commits](CONTRIBUTING.md)
