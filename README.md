@@ -30,6 +30,10 @@ Django concentra as páginas, autenticação, regras de negócio e acesso a dado
 - **Banco futuro:** PostgreSQL no Supabase, após entrega e aprovação da equipe de banco.
 - **Arquivos estáticos:** WhiteNoise no serviço Django.
 
+**Aplicação publicada:** https://projeto-estagios.onrender.com
+
+O deploy foi validado por HTTPS com health check, CSS e JavaScript estáticos, cadastro, perfil, filtros, favorito e candidatura. O código publicado corresponde à branch `main` deste repositório.
+
 Depois do deploy, o sistema pode ser acessado pelo endereço HTTPS público do Render sem manter um computador local ligado. Nesta fase, `DATABASES = {}` e os cadastros, tokens, favoritos, candidaturas e alterações de perfil ficam somente na memória do processo. Eles podem desaparecer a qualquer reinício, novo deploy ou suspensão do serviço. Não use dados pessoais ou credenciais reais.
 
 O plano gratuito do Render pode suspender o serviço por inatividade. O primeiro acesso após a suspensão pode levar algum tempo enquanto a instância inicia novamente (cold start).
