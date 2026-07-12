@@ -65,7 +65,7 @@
 
   </main>
 
-<script src="/static/web_ui/api.js"></script>
+<script src="{% static 'web_ui/api.js' %}"></script>
 <script>
 if (Platform.requireAuth()) {
   const MODALIDADES = {onsite: 'Presencial', hybrid: 'Híbrido', remote: 'Remoto'};
