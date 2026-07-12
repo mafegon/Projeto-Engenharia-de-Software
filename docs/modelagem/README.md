@@ -4,8 +4,8 @@ Esta pasta reúne a documentação de modelagem do sistema de gerenciamento de v
 
 ## Estrutura da pasta
 
-- `diagramas_de_classes/`: contém a documentação do diagrama de classes, a justificativa das decisões de modelagem e o PDF exportado pelo draw.io.
-- `implementacao/`: contém uma implementação em Python de parte das classes modeladas, além de um arquivo de teste simples para validar o funcionamento.
+- `diagrama_de_classes.pdf`: diagrama de classes, como arquivo PDF exportado pelo draw.io.
+- `implementacao/`: implementação em Python de parte das classes modeladas, além de um arquivo de teste simples para validar o funcionamento.
 
 ## Diagrama de Classes
 
