@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Perfil — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased">
+
+  <!-- Cabeçalho -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 min-h-16 py-3 sm:py-0 flex flex-col items-start gap-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/vagas/" class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight text-slate-900">Estágios Acadêmicos</span>
+      </a>
+      <nav class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
+        <a href="/vagas/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Vagas</a>
+        <a href="/perfil/" class="text-sm font-bold text-blue-700">Meu perfil</a>
+        <a href="/perfil/" title="Meu perfil">
+          <div data-user-initials class="w-9 h-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px]">MF</div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-[760px] mx-auto px-4 sm:px-6 pt-8 pb-16 flex flex-col gap-5">
+
+    <div>
+      <h1 class="text-2xl font-extrabold tracking-tight">Meu perfil</h1>
+      <p class="mt-1 text-sm text-slate-500">Mantenha seus dados atualizados — eles são exibidos às empresas quando você se candidata.</p>
+    </div>
+
+    <form id="form-perfil" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+
+      <div class="flex flex-col items-start sm:flex-row sm:items-center gap-5 border-b border-slate-100 pb-6">
+        <div data-user-initials class="w-[72px] h-[72px] rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-extrabold text-2xl shrink-0">MF</div>
+        <div>
+          <p id="perfil-cabecalho-nome" class="text-[17px] font-extrabold">Maria Fernanda Fernandes</p>
+          <p id="perfil-cabecalho-curso" class="text-[13px] text-slate-500">Ciência da Computação · UNIFAP · 5º semestre</p>
+          <button type="button" disabled title="Envio de foto ainda não disponível" class="mt-2 h-8 px-3.5 whitespace-nowrap border border-slate-300 hover:border-blue-700 hover:text-blue-700 rounded-lg bg-white text-slate-700 font-semibold text-xs">Alterar foto</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="perfil-nome" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Nome completo</label>
+          <input id="perfil-nome" name="full_name" type="text" required class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="perfil-email" class="block text-[13px] font-semibold text-slate-700 mb-1.5">E-mail institucional</label>
+          <input id="perfil-email" type="email" readonly class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="perfil-curso" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Curso</label>
+          <select id="perfil-curso" disabled class="w-full h-11 border border-slate-300 rounded-[10px] px-2.5 text-sm bg-white outline-none focus:border-blue-700">
+            <option>Ciência da Computação</option>
+            <option>Engenharia Elétrica</option>
+            <option>Administração</option>
+            <option>Jornalismo</option>
+            <option>Ciências Biológicas</option>
+          </select>
+        </div>
+        <div>
+          <label for="perfil-matricula" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Matrícula</label>
+          <input id="perfil-matricula" type="text" readonly class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="perfil-telefone" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Telefone</label>
+          <input id="perfil-telefone" name="phone" type="tel" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="perfil-cidade" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Cidade</label>
+          <input id="perfil-cidade" name="city" type="text" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+      </div>
+
+      <div>
+        <label for="perfil-bio" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Sobre você</label>
+        <textarea id="perfil-bio" name="bio" rows="4" class="w-full border border-slate-300 rounded-[10px] px-3.5 py-3 text-sm leading-relaxed outline-none resize-y focus:border-blue-700"></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 border-t border-slate-100 pt-6">
+        <button type="submit" class="h-[46px] px-7 rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Salvar alterações</button>
+        <a href="/vagas/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Cancelar</a>
+        <span id="msg-salvo" class="hidden text-[13px] font-bold text-emerald-700">Alterações salvas</span>
+      </div>
+
+    </form>
+  </main>
+
+<script src="/static/web_ui/api.js"></script>
+<script>
+let perfil = null;
+let t;
+
+function preencherPerfil(data) {
+  perfil = data;
+  const iniciais = Platform.initials(data.full_name);
+  document.querySelectorAll('[data-user-initials]').forEach((item) => item.textContent = iniciais);
+  document.getElementById('perfil-cabecalho-nome').textContent = data.full_name;
+  document.getElementById('perfil-cabecalho-curso').textContent = `${data.course.name} · UNIFAP${data.semester ? ` · ${data.semester}º semestre` : ''}`;
+  document.getElementById('perfil-nome').value = data.full_name;
+  document.getElementById('perfil-email').value = data.email;
+  document.getElementById('perfil-curso').value = data.course.name;
+  document.getElementById('perfil-matricula').value = data.registration;
+  document.getElementById('perfil-telefone').value = data.phone || '';
+  document.getElementById('perfil-cidade').value = data.city || '';
+  document.getElementById('perfil-bio').value = data.bio || '';
+}
+
+function salvarConfirmacao() {
+  const m = document.getElementById('msg-salvo');
+  m.classList.remove('hidden');
+  clearTimeout(t);
+  t = setTimeout(() => m.classList.add('hidden'), 3000);
+}
+
+document.getElementById('form-perfil').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(event.currentTarget));
+  try {
+    preencherPerfil(await Platform.request('/api/v1/me/profile/', {method: 'PATCH', body: JSON.stringify(data)}));
+    salvarConfirmacao();
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+if (Platform.requireAuth()) {
+  Platform.request('/api/v1/me/profile/').then(preencherPerfil).catch((error) => {
+    if (error.status === 401) window.location.replace('/');
+    else alert(error.message);
+  });
+}
+</script>
+</body>
+</html>

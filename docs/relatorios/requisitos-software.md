@@ -69,11 +69,15 @@ Nesta versão inicial, o documento não pretende descrever todos os fluxos, regr
 ```text
 /
 ├── README.md
+├── requirements.txt
+├── render.yaml
+├── build.sh
+├── backend/
+│   ├── manage.py
+│   ├── config/
+│   └── theme/
 ├── docs/
-│   └── requisitos-software.md
-├── src/
-│   ├── frontend/
-│   └── backend/
+│   └── relatorios/
 └── tests/
 ```
 
@@ -83,9 +87,13 @@ A estrutura será ajustada para um projeto Django, com aplicações organizadas 
 - **Aplicação web e backend:** Python com Django.
 - **Interface:** templates do Django com Tailwind CSS.
 - **Integração de estilos:** `django-tailwind`.
-- **Banco de dados:** PostgreSQL.
+- **Banco de dados futuro:** PostgreSQL; a versão atual não abre conexão com banco.
+- **Hospedagem da aplicação:** Render.
+- **Persistência atual:** memória efêmera do processo Django, sem banco de dados.
+- **PostgreSQL futuro:** Supabase, após definição e aprovação da equipe de banco.
+- **Repositório e integração:** GitHub.
 
-Django será responsável pelas páginas, autenticação, regras de negócio e persistência. O Tailwind CSS será integrado por meio do `django-tailwind`. Esta definição substitui propostas tecnológicas anteriores e deve orientar a arquitetura, o código, os testes e a documentação.
+Django será responsável pelas páginas, autenticação e regras de negócio. A persistência será integrada ao Django futuramente, após definição e aprovação da equipe de banco. O Tailwind CSS será integrado por meio do `django-tailwind`. Esta definição substitui propostas tecnológicas anteriores e deve orientar a arquitetura, o código, os testes e a documentação.
 
 ## 11. Critérios Básicos de Aceitação
 - Alunos conseguem visualizar vagas disponíveis.

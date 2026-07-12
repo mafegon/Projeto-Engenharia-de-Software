@@ -56,7 +56,10 @@ Não faz parte do escopo inicial:
 - A plataforma será acessada por navegador web.
 - A aplicação será desenvolvida em Python com Django.
 - A interface usará templates do Django e Tailwind CSS integrado pelo `django-tailwind`.
-- O banco de dados oficial será PostgreSQL.
+- O banco de dados oficial futuro será PostgreSQL; a versão demonstrável atual não possui persistência.
+- O código será mantido no GitHub e a aplicação Django será hospedada no Render. A demonstração atual usa apenas memória efêmera (`DATABASES = {}`), sem banco de dados; PostgreSQL no Supabase é uma integração futura sob responsabilidade da equipe de banco.
+- Enquanto não houver banco, reinícios, novos deploys ou suspensões do serviço podem apagar cadastros, favoritos, candidaturas e alterações de perfil, portanto somente dados fictícios devem ser usados.
+- Credenciais e segredos de produção serão fornecidos exclusivamente por variáveis de ambiente.
 - O escopo poderá ser ajustado conforme decisões da equipe e orientação da disciplina.
 
 ## 10. Restrições

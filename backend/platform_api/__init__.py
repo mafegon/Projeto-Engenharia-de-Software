@@ -1,0 +1,1 @@
+"""Academic internship platform API."""

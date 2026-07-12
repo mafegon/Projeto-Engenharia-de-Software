@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalhes da Vaga — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased" data-internship-slug="{{ internship_slug }}">
+
+  <!-- Cabeçalho -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 min-h-16 py-3 sm:py-0 flex flex-col items-start gap-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/vagas/" class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight text-slate-900">Estágios Acadêmicos</span>
+      </a>
+      <nav class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
+        <a href="/vagas/" class="text-sm font-bold text-blue-700">Vagas</a>
+        <a href="/perfil/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Meu perfil</a>
+        <a href="/perfil/" title="Meu perfil">
+          <div data-user-initials class="w-9 h-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px]">MF</div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-[1120px] mx-auto px-4 sm:px-6 pt-6 pb-16 flex flex-col gap-4">
+
+    <a href="/vagas/" class="text-[13px] font-semibold text-slate-500 hover:text-blue-700">← Voltar para a listagem de vagas</a>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start">
+
+      <!-- Conteúdo principal -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-7">
+
+        <div class="flex flex-col sm:flex-row gap-4 items-start">
+          <div id="vaga-iniciais" class="w-14 h-14 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-[17px] shrink-0">PR</div>
+          <div>
+            <h1 id="vaga-titulo" class="text-2xl font-extrabold tracking-tight">Estágio em Desenvolvimento Web</h1>
+            <p id="vaga-empresa-local" class="mt-1.5 text-sm text-slate-500">PRODAP — Centro de Gestão da Tecnologia da Informação do Amapá · Centro, Macapá</p>
+            <div class="flex flex-wrap gap-2 mt-2.5">
+              <span id="vaga-area" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Tecnologia da Informação</span>
+              <span id="vaga-modalidade-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">Híbrido</span>
+              <span id="vaga-carga-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">30h semanais</span>
+              <span id="vaga-bolsa-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">R$ 1.000/mês</span>
+            </div>
+          </div>
+        </div>
+
+        <section>
+          <h2 class="text-base font-extrabold mb-2.5">Descrição da vaga</h2>
+          <p id="vaga-descricao" class="text-sm text-slate-700 leading-7">Oportunidade de estágio na equipe de desenvolvimento de sistemas do PRODAP, atuando na construção e manutenção de aplicações web utilizadas por órgãos do Governo do Estado do Amapá. O estagiário participará do ciclo completo de desenvolvimento, com acompanhamento de desenvolvedores seniores, em projetos com Python, Django e PostgreSQL.</p>
+        </section>
+
+        <section>
+          <h2 class="text-base font-extrabold mb-2.5">Requisitos</h2>
+          <ul id="vaga-requisitos" class="list-disc pl-5 flex flex-col gap-2 text-sm text-slate-700 leading-relaxed">
+            <li>Estar cursando a partir do 4º semestre de Ciência da Computação ou áreas afins</li>
+            <li>Conhecimentos básicos em lógica de programação e banco de dados</li>
+            <li>Familiaridade com Python (Django é um diferencial)</li>
+            <li>Noções de HTML, CSS e Git</li>
+            <li>Disponibilidade de 30h semanais</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-base font-extrabold mb-2.5">Sobre a empresa</h2>
+          <p id="vaga-sobre-empresa" class="text-sm text-slate-700 leading-7">O PRODAP é o órgão responsável pela gestão da tecnologia da informação e comunicação do Governo do Estado do Amapá, desenvolvendo e mantendo os sistemas utilizados pela administração pública estadual.</p>
+        </section>
+
+      </div>
+
+      <!-- Barra lateral -->
+      <div class="static lg:sticky lg:top-[88px] flex flex-col gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
+          <div>
+            <p class="text-[13px] text-slate-500">Bolsa mensal</p>
+            <p id="vaga-bolsa" class="text-2xl font-extrabold tracking-tight">R$ 1.000 <span class="text-[13px] font-semibold text-slate-500">+ auxílio-transporte</span></p>
+          </div>
+
+          <div class="border-t border-slate-100 pt-4 flex flex-col gap-2.5 text-[13px]">
+            <div class="flex justify-between"><span class="text-slate-500">Modalidade</span><span id="vaga-modalidade" class="font-semibold">Híbrido</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Carga horária</span><span id="vaga-carga" class="font-semibold">30h semanais</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Local</span><span id="vaga-local" class="font-semibold">Centro, Macapá</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Publicada</span><span id="vaga-publicada" class="font-semibold">há 2 dias</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Inscrições até</span><span id="vaga-prazo" class="font-semibold">31/07/2026</span></div>
+          </div>
+
+          <div class="flex flex-col gap-2.5">
+            <button id="btn-candidatar" onclick="candidatar()" class="w-full h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Candidatar-se</button>
+            <button id="btn-salvar" onclick="alternarSalvar()" class="w-full h-11 rounded-[10px] border border-slate-300 bg-white text-slate-700 font-bold text-sm">Salvar vaga</button>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4">
+          <p class="text-xs text-blue-800 leading-relaxed">Seu perfil e contato só ficam visíveis para a empresa após a confirmação da candidatura.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+<script src="/static/web_ui/api.js"></script>
+<script>
+const slug = document.body.dataset.internshipSlug;
+const MODALIDADES = {onsite: 'Presencial', hybrid: 'Híbrido', remote: 'Remoto'};
+let vaga = null;
+
+function dataBr(data) {
+  return new Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(data + 'T00:00:00Z'));
+}
+
+function renderVaga() {
+  const modalidade = MODALIDADES[vaga.modality];
+  document.getElementById('vaga-iniciais').textContent = vaga.initials;
+  document.getElementById('vaga-titulo').textContent = vaga.title;
+  document.getElementById('vaga-empresa-local').textContent = `${vaga.company} · ${vaga.location}`;
+  document.getElementById('vaga-area').textContent = vaga.area;
+  document.getElementById('vaga-modalidade-tag').textContent = modalidade;
+  document.getElementById('vaga-carga-tag').textContent = `${vaga.weekly_hours}h semanais`;
+  document.getElementById('vaga-bolsa-tag').textContent = vaga.stipend;
+  document.getElementById('vaga-descricao').textContent = vaga.description;
+  document.getElementById('vaga-requisitos').innerHTML = vaga.requirements.map((item) => `<li>${item}</li>`).join('');
+  document.getElementById('vaga-sobre-empresa').textContent = `${vaga.company} oferece esta oportunidade de estágio para estudantes que atendam aos requisitos informados.`;
+  document.getElementById('vaga-bolsa').innerHTML = `${vaga.stipend.replace('/mês', '')} <span class="text-[13px] font-semibold text-slate-500">+ auxílio-transporte</span>`;
+  document.getElementById('vaga-modalidade').textContent = modalidade;
+  document.getElementById('vaga-carga').textContent = `${vaga.weekly_hours}h semanais`;
+  document.getElementById('vaga-local').textContent = vaga.location;
+  document.getElementById('vaga-publicada').textContent = vaga.published;
+  document.getElementById('vaga-prazo').textContent = dataBr(vaga.application_deadline);
+  atualizarSalvar();
+}
+
+function atualizarSalvar() {
+  const b = document.getElementById('btn-salvar');
+  b.textContent = vaga.saved ? 'Vaga salva' : 'Salvar vaga';
+  b.className = vaga.saved
+    ? 'w-full h-11 rounded-[10px] border border-blue-700 bg-blue-50 text-blue-700 font-bold text-sm'
+    : 'w-full h-11 rounded-[10px] border border-slate-300 bg-white text-slate-700 font-bold text-sm';
+}
+
+async function candidatar() {
+  try {
+    await Platform.request(`/api/v1/internships/${slug}/applications/`, {method: 'POST', body: '{}'});
+    const b = document.getElementById('btn-candidatar');
+    b.textContent = 'Candidatura enviada';
+    b.className = 'w-full h-[46px] rounded-[10px] bg-emerald-700 text-white font-bold text-[15px] cursor-default';
+    b.disabled = true;
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function alternarSalvar() {
+  try {
+    await Platform.request(`/api/v1/internships/${slug}/saved/`, {method: vaga.saved ? 'DELETE' : 'PUT'});
+    vaga.saved = !vaga.saved;
+    atualizarSalvar();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+if (Platform.requireAuth()) {
+  Promise.all([
+    Platform.request(`/api/v1/internships/${slug}/`),
+    Platform.request('/api/v1/me/profile/')
+  ]).then(([internship, profile]) => {
+    vaga = internship;
+    renderVaga();
+    document.querySelector('[data-user-initials]').textContent = Platform.initials(profile.full_name);
+  }).catch((error) => {
+    if (error.status === 401) window.location.replace('/');
+    else if (error.status === 404) window.location.replace('/vagas/');
+    else alert(error.message);
+  });
+}
+</script>
+</body>
+</html>
