@@ -107,4 +107,4 @@ Este documento registra histórias de usuário iniciais para orientar a implemen
 - O sistema deve evitar salvar a mesma vaga mais de uma vez para o mesmo aluno.
 
 ## 3. Observações
-As histórias descritas são uma base inicial. A equipe poderá incluir novas histórias, alterar prioridades e detalhar fluxos conforme a definição das tecnologias e regras de negócio.
+As histórias descritas são uma base inicial. A equipe poderá incluir novas histórias, alterar prioridades e detalhar fluxos conforme a evolução das regras de negócio e do escopo do MVP.

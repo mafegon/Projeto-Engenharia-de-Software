@@ -77,9 +77,17 @@ Nesta versão inicial, o documento não pretende descrever todos os fluxos, regr
 └── tests/
 ```
 
-A estrutura acima é uma sugestão inicial e pode ser ajustada conforme as tecnologias escolhidas pela equipe.
+A estrutura será ajustada para um projeto Django, com aplicações organizadas por domínio, templates do Django, tema Tailwind e testes automatizados.
 
-## 10. Critérios Básicos de Aceitação
+## 10. Stack Oficial
+- **Aplicação web e backend:** Python com Django.
+- **Interface:** templates do Django com Tailwind CSS.
+- **Integração de estilos:** `django-tailwind`.
+- **Banco de dados:** PostgreSQL.
+
+Django será responsável pelas páginas, autenticação, regras de negócio e persistência. O Tailwind CSS será integrado por meio do `django-tailwind`. Esta definição substitui propostas tecnológicas anteriores e deve orientar a arquitetura, o código, os testes e a documentação.
+
+## 11. Critérios Básicos de Aceitação
 - Alunos conseguem visualizar vagas disponíveis.
 - Empresas conseguem cadastrar pelo menos uma vaga.
 - Uma vaga cadastrada apresenta informações suficientes para o aluno entender a oportunidade.
@@ -87,8 +95,7 @@ A estrutura acima é uma sugestão inicial e pode ser ajustada conforme as tecno
 - A documentação mantém requisitos funcionais e não funcionais identificados por código.
 - As histórias de usuário possuem critérios de aceitação básicos.
 
-## 11. Pendências para Refinamento
-- Definir tecnologias de frontend, backend e banco de dados.
+## 12. Pendências para Refinamento
 - Detalhar os campos obrigatórios dos cadastros.
 - Definir fluxo completo de candidatura.
 - Definir regras de aprovação, expiração ou remoção de vagas.
