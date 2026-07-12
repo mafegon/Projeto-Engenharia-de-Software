@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+pip install -r requirements.txt
+python backend/manage.py tailwind install
+python backend/manage.py tailwind build
+python backend/manage.py collectstatic --no-input
