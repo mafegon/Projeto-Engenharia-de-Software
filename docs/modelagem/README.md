@@ -9,7 +9,7 @@ Esta pasta reúne a documentação de modelagem do sistema de gerenciamento de v
 
 ## Diagrama de Classes
 
-O diagrama de classes foi criado no draw.io e exportado como PDF no arquivo `diagramas_de_classes/diagrama_de_classes.pdf`. Ele representa a estrutura do sistema de gerenciamento de vagas de estágio de forma organizada e de fácil manutenção.
+O diagrama de classes representa a estrutura do sistema de gerenciamento de vagas de estágio de forma organizada e de fácil manutenção.
 
 A modelagem considera as principais entidades do sistema:
 

@@ -96,4 +96,6 @@ python backend\manage.py test
 - [Documento de Visão](docs/relatorios/documento-visao.md)
 - [User Stories e Critérios de Aceitação](docs/relatorios/user-stories.md)
 - [Hospedagem web no Render e integração futura com Supabase](docs/relatorios/hospedagem-web.md)
+- [Relatórios](docs/relatorios)
+- [Modelagem](docs/modelagem)
 - [Guia de contribuição e padrão obrigatório de commits](CONTRIBUTING.md)
