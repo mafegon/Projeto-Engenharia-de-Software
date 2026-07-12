@@ -13,6 +13,15 @@ Observa-se, no âmbito das instituições de ensino técnico e superior, uma dem
 
 O objetivo deste projeto é desenvolver uma plataforma web capaz de unificar os interesses de ambas as partes **(acadêmicos e organizações concedentes)**, oferecendo aos alunos uma **visualização direta das vagas de estágio disponíveis**  e proporcionar às empresas **uma plataforma de cadastro unificada e versátil às suas necessidades**.
 
+## 🧰 Stack oficial
+
+- **Aplicação web e backend:** Python com Django.
+- **Interface:** templates do Django com Tailwind CSS.
+- **Integração de estilos:** [django-tailwind](https://github.com/timonweb/django-tailwind).
+- **Banco de dados:** PostgreSQL.
+
+Django concentra as páginas, autenticação, regras de negócio e acesso a dados. O Tailwind CSS será integrado ao projeto pelo `django-tailwind`. Esta é a definição tecnológica oficial do projeto.
+
 ### 📋 Requisitos Funcionais
 - **RF-01:** permitir o cadastro e autenticação de alunos interessados em vagas de estágio.
 - **RF-02:** permitir o cadastro e autenticação de empresas ou organizações concedentes.
@@ -35,3 +44,4 @@ O objetivo deste projeto é desenvolver uma plataforma web capaz de unificar os 
 - [Documento de Requisitos de Software](docs/requisitos-software.md)
 - [Documento de Visão](docs/documento-visao.md)
 - [User Stories e Critérios de Aceitação](docs/user-stories.md)
+- [Guia de contribuição e padrão obrigatório de commits](CONTRIBUTING.md)

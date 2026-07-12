@@ -54,7 +54,9 @@ Não faz parte do escopo inicial:
 
 ## 9. Premissas
 - A plataforma será acessada por navegador web.
-- A equipe definirá posteriormente as tecnologias de frontend, backend e banco de dados.
+- A aplicação será desenvolvida em Python com Django.
+- A interface usará templates do Django e Tailwind CSS integrado pelo `django-tailwind`.
+- O banco de dados oficial será PostgreSQL.
 - O escopo poderá ser ajustado conforme decisões da equipe e orientação da disciplina.
 
 ## 10. Restrições
