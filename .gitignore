@@ -11,3 +11,5 @@ htmlcov/
 staticfiles/
 node_modules/
 .runserver.*
+.claude
+.agents
