@@ -1,3 +1,6 @@
+from pathlib import Path
+
+from django.contrib.staticfiles import finders
 from django.templatetags.static import static
 from django.test import SimpleTestCase, override_settings
 from django.urls import resolve, reverse
@@ -44,6 +47,37 @@ class WebUiRouteTests(SimpleTestCase):
         self.assertEqual(reverse("web_ui:login"), "/")
         self.assertEqual(reverse("web_ui:internships"), "/vagas/")
         self.assertEqual(reverse("web_ui:profile"), "/perfil/")
+
+    def test_authenticated_pages_start_with_neutral_profile_avatar(self):
+        for path in ("/vagas/", "/vagas/prodap/", "/perfil/"):
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                self.assertNotContains(response, "Maria Fernanda Fernandes")
+                self.assertNotContains(response, ">MF<")
+                self.assertContains(response, 'aria-label="Meu perfil"')
+                self.assertContains(response, "data-user-initials")
+                self.assertContains(response, 'aria-hidden="true"')
+                self.assertContains(response, "animate-pulse")
+
+    def test_profile_stays_busy_and_read_only_until_hydrated(self):
+        response = self.client.get("/perfil/")
+        self.assertContains(response, 'id="form-perfil" aria-busy="true"')
+        self.assertContains(response, 'id="perfil-status" role="status" aria-live="polite"')
+        self.assertContains(response, 'id="perfil-submit" type="submit" disabled')
+        self.assertContains(response, '<option value="" selected>Carregando…</option>', html=True)
+        for field_id in ("perfil-nome", "perfil-telefone", "perfil-cidade", "perfil-bio"):
+            self.assertContains(response, f'id="{field_id}"')
+        self.assertContains(response, "disabled data-profile-editable", count=4)
+        self.assertContains(response, "document.getElementById('perfil-curso').value = data.course.name")
+        self.assertContains(response, "document.getElementById('perfil-submit').disabled = false")
+        self.assertContains(response, "setAttribute('aria-busy', 'false')")
+
+    def test_initials_helper_has_no_fictitious_fallback(self):
+        script_path = finders.find("web_ui/api.js")
+        self.assertIsNotNone(script_path)
+        source = Path(script_path).read_text(encoding="utf-8")
+        self.assertNotIn('String(name || "Aluno")', source)
+        self.assertIn('if (!normalized) return "";', source)
 
     def test_backend_status_was_moved_out_of_home(self):
         response = self.client.get("/backend-status/", HTTP_ACCEPT="text/html")
