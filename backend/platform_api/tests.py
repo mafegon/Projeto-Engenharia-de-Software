@@ -121,7 +121,7 @@ class PlatformApiTests(SimpleTestCase):
 
     def test_same_origin_web_ui_csrf_and_bearer_flow(self):
         browser = Client(enforce_csrf_checks=True)
-        page = browser.get("/")
+        page = browser.get("/aluno/")
         csrf_token = page.cookies["csrftoken"].value
         csrf = {"HTTP_X_CSRFTOKEN": csrf_token}
         registration = {
@@ -272,3 +272,173 @@ class PlatformApiTests(SimpleTestCase):
         self.assertEqual(wrong_method["Allow"], "GET")
         for response in (invalid_json, wrong_type, invalid_token, wrong_method):
             self.assertEqual(set(self.json(response)["error"]), {"code", "message"})
+
+
+class CompanyApiTests(SimpleTestCase):
+    def setUp(self):
+        repository.reset()
+
+    @staticmethod
+    def json(response):
+        return json.loads(response.content)
+
+    def register(self, **overrides):
+        data = {
+            "legal_name": "Amazônia Tech Ltda",
+            "cnpj": "11.222.333/0001-44",
+            "sector": "Tecnologia da Informação",
+            "email": "rh@amazoniatech.com.br",
+            "password": "empresa-forte-123",
+        }
+        data.update(overrides)
+        return self.client.post("/api/v1/company/auth/register/", data=json.dumps(data), content_type="application/json")
+
+    def token(self, **overrides):
+        return self.json(self.register(**overrides))["data"]["access_token"]
+
+    @staticmethod
+    def authorization(token):
+        return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
+
+    def job_payload(self, **overrides):
+        data = {
+            "title": "Estágio em Backend",
+            "area": "Tecnologia da Informação",
+            "modality": "remote",
+            "weekly_hours": 20,
+            "stipend": "R$ 1.000/mês",
+            "location": "Remoto",
+            "openings": 2,
+            "description": "Apoio ao time de backend em Python e Django.",
+            "requirements": "Lógica de programação e Python.",
+            "application_type": "internal",
+        }
+        data.update(overrides)
+        return data
+
+    def test_register_enforces_contract_and_hides_password_hash(self):
+        response = self.register()
+        body = self.json(response)["data"]
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(body["company"]["cnpj"], "11.222.333/0001-44")
+        self.assertEqual(body["company"]["initials"], "AM")
+        self.assertNotIn("password_hash", body["company"])
+        for overrides in (
+            {"cnpj": "123"},
+            {"password": "1234"},
+            {"legal_name": ""},
+            {"sector": ""},
+            {"email": "sem-arroba"},
+        ):
+            repository.reset()
+            self.assertEqual(self.register(**overrides).status_code, 422)
+
+    def test_register_rejects_duplicate_email_and_cnpj(self):
+        self.assertEqual(self.register().status_code, 201)
+        self.assertEqual(self.register(email="outro@amazoniatech.com.br").status_code, 409)
+        self.assertEqual(self.register(cnpj="11222333000144").status_code, 409)
+
+    def test_login_with_seeded_company_and_invalid_credentials(self):
+        valid = self.client.post(
+            "/api/v1/company/auth/login/",
+            data=json.dumps({"email": "estagios@prodap.ap.gov.br", "password": "prodap-estagios-2026"}),
+            content_type="application/json",
+        )
+        invalid = self.client.post(
+            "/api/v1/company/auth/login/",
+            data=json.dumps({"email": "estagios@prodap.ap.gov.br", "password": "errada"}),
+            content_type="application/json",
+        )
+        self.assertEqual(valid.status_code, 200)
+        self.assertEqual(invalid.status_code, 401)
+
+    def test_dashboard_reports_seeded_jobs_and_stats(self):
+        token = self.json(self.client.post(
+            "/api/v1/company/auth/login/",
+            data=json.dumps({"email": "estagios@prodap.ap.gov.br", "password": "prodap-estagios-2026"}),
+            content_type="application/json",
+        ))["data"]["access_token"]
+        data = self.json(self.client.get("/api/v1/company/jobs/", **self.authorization(token)))["data"]
+        self.assertEqual(len(data["jobs"]), 4)
+        self.assertEqual(data["stats"]["active_jobs"], 3)
+        self.assertEqual(data["stats"]["total_candidates"], 10)
+        self.assertEqual(data["stats"]["new_candidates"], 3)
+
+    def test_profile_update_contract_and_immutable_fields(self):
+        token = self.token()
+        self.assertEqual(self.client.get("/api/v1/company/profile/").status_code, 401)
+        updated = self.client.patch(
+            "/api/v1/company/profile/",
+            data=json.dumps({"phone": "(96) 3000-0000", "about": "Somos uma software house."}),
+            content_type="application/json",
+            **self.authorization(token),
+        )
+        self.assertEqual(updated.status_code, 200)
+        self.assertEqual(self.json(updated)["data"]["phone"], "(96) 3000-0000")
+        immutable = self.client.patch(
+            "/api/v1/company/profile/",
+            data=json.dumps({"cnpj": "99.999.999/9999-99"}),
+            content_type="application/json",
+            **self.authorization(token),
+        )
+        self.assertEqual(immutable.status_code, 422)
+
+    def test_create_job_appears_in_dashboard_and_validates(self):
+        token = self.token()
+        auth = self.authorization(token)
+        created = self.client.post(
+            "/api/v1/company/jobs/", data=json.dumps(self.job_payload()), content_type="application/json", **auth
+        )
+        self.assertEqual(created.status_code, 201)
+        job_id = self.json(created)["data"]["id"]
+        dashboard = self.json(self.client.get("/api/v1/company/jobs/", **auth))["data"]
+        self.assertEqual([job["id"] for job in dashboard["jobs"]], [job_id])
+        self.assertEqual(dashboard["stats"]["active_jobs"], 1)
+        for overrides in (
+            {"modality": "virtual"},
+            {"weekly_hours": 15},
+            {"application_type": "external", "external_url": "nao-e-url"},
+            {"title": ""},
+        ):
+            invalid = self.client.post(
+                "/api/v1/company/jobs/", data=json.dumps(self.job_payload(**overrides)), content_type="application/json", **auth
+            )
+            self.assertEqual(invalid.status_code, 422)
+
+    def test_job_detail_and_delete_are_scoped_to_owner(self):
+        token = self.token()
+        auth = self.authorization(token)
+        job_id = self.json(self.client.post(
+            "/api/v1/company/jobs/", data=json.dumps(self.job_payload()), content_type="application/json", **auth
+        ))["data"]["id"]
+        detail = self.client.get(f"/api/v1/company/jobs/{job_id}/", **auth)
+        self.assertEqual(detail.status_code, 200)
+        self.assertEqual(self.json(detail)["data"]["candidates"], [])
+
+        other = self.authorization(self.token(email="outra@empresa.com.br", cnpj="55.666.777/0001-88"))
+        self.assertEqual(self.client.get(f"/api/v1/company/jobs/{job_id}/", **other).status_code, 404)
+        self.assertEqual(self.client.delete(f"/api/v1/company/jobs/{job_id}/", **other).status_code, 404)
+
+        self.assertEqual(self.client.delete(f"/api/v1/company/jobs/{job_id}/", **auth).status_code, 204)
+        self.assertEqual(self.client.get(f"/api/v1/company/jobs/{job_id}/", **auth).status_code, 404)
+
+    def test_company_and_student_tokens_are_not_interchangeable(self):
+        company_token = self.token()
+        self.assertEqual(self.client.get("/api/v1/me/profile/", **self.authorization(company_token)).status_code, 401)
+
+        student = {
+            "full_name": "Geovanni Silva",
+            "course_code": "cc",
+            "registration": "202612345",
+            "email": "geovanni@unifap.br",
+            "password": "senha-forte-123",
+        }
+        student_token = self.json(self.client.post(
+            "/api/v1/auth/register/", data=json.dumps(student), content_type="application/json"
+        ))["data"]["access_token"]
+        self.assertEqual(self.client.get("/api/v1/company/jobs/", **self.authorization(student_token)).status_code, 401)
+
+    def test_seed_prodap_company_and_jobs(self):
+        company = repository.get_company(1)
+        self.assertEqual(company.initials, "PR")
+        self.assertEqual(len(repository.list_company_jobs(1)), 4)
