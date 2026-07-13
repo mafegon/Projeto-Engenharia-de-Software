@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar Vaga — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased">
+
+  <!-- Cabeçalho -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 min-h-16 py-3 sm:py-0 flex flex-col items-start gap-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/empresa/vagas/" class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight text-slate-900">Estágios Acadêmicos</span>
+      </a>
+      <nav class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
+        <a href="/empresa/vagas/" class="text-sm font-bold text-blue-700">Minhas vagas</a>
+        <a href="/empresa/perfil/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Perfil da empresa</a>
+        <a href="/empresa/perfil/" title="Perfil da empresa">
+          <div data-company-initials class="w-9 h-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px]">PR</div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-[760px] mx-auto px-4 sm:px-6 pt-8 pb-16 flex flex-col gap-5">
+
+    <div>
+      <a href="/empresa/vagas/" class="text-[13px] font-semibold text-slate-500 hover:text-blue-700">← Voltar para minhas vagas</a>
+      <h1 class="mt-2 text-2xl font-extrabold tracking-tight">Cadastrar vaga</h1>
+      <p class="mt-1 text-sm text-slate-500">Preencha os dados da vaga de estágio. Ela ficará visível para os alunos da plataforma.</p>
+    </div>
+
+    <form id="form-vaga" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+
+      <div>
+        <label for="vaga-titulo" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Título da vaga</label>
+        <input id="vaga-titulo" name="title" type="text" required placeholder="Ex.: Estágio em Desenvolvimento Web" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="vaga-area" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Área</label>
+          <select id="vaga-area" name="area" required class="w-full h-11 border border-slate-300 rounded-[10px] px-2.5 text-sm bg-white outline-none focus:border-blue-700">
+            <option value="">Selecione</option>
+            <option>Tecnologia da Informação</option>
+            <option>Engenharia</option>
+            <option>Comunicação</option>
+            <option>Administração</option>
+            <option>Meio Ambiente</option>
+          </select>
+        </div>
+        <div>
+          <label for="vaga-modalidade" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Modalidade</label>
+          <select id="vaga-modalidade" name="modality" required class="w-full h-11 border border-slate-300 rounded-[10px] px-2.5 text-sm bg-white outline-none focus:border-blue-700">
+            <option value="">Selecione</option>
+            <option value="onsite">Presencial</option>
+            <option value="hybrid">Híbrido</option>
+            <option value="remote">Remoto</option>
+          </select>
+        </div>
+        <div>
+          <label for="vaga-carga" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Carga horária</label>
+          <select id="vaga-carga" name="weekly_hours" required class="w-full h-11 border border-slate-300 rounded-[10px] px-2.5 text-sm bg-white outline-none focus:border-blue-700">
+            <option value="">Selecione</option>
+            <option value="20">20h semanais</option>
+            <option value="30">30h semanais</option>
+          </select>
+        </div>
+        <div>
+          <label for="vaga-bolsa" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Bolsa mensal</label>
+          <input id="vaga-bolsa" name="stipend" type="text" required placeholder="Ex.: R$ 1.000/mês" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="vaga-local" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Localidade</label>
+          <input id="vaga-local" name="location" type="text" required placeholder="Ex.: Centro, Macapá" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="vaga-openings" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Número de vagas</label>
+          <input id="vaga-openings" name="openings" type="number" min="1" value="1" required class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+      </div>
+
+      <div>
+        <label for="vaga-descricao" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Descrição da vaga</label>
+        <textarea id="vaga-descricao" name="description" rows="4" required placeholder="Descreva as atividades do estágio, o time e o que o aluno vai aprender." class="w-full border border-slate-300 rounded-[10px] px-3.5 py-3 text-sm leading-relaxed outline-none resize-y focus:border-blue-700"></textarea>
+      </div>
+
+      <div>
+        <label for="vaga-requisitos" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Requisitos</label>
+        <textarea id="vaga-requisitos" name="requirements" rows="3" placeholder="Ex.: cursando a partir do 4º semestre; conhecimentos em HTML, CSS e JavaScript." class="w-full border border-slate-300 rounded-[10px] px-3.5 py-3 text-sm leading-relaxed outline-none resize-y focus:border-blue-700"></textarea>
+      </div>
+
+      <div class="border-t border-slate-100 pt-6 flex flex-col gap-3">
+        <label class="text-[13px] font-semibold text-slate-700">Forma de candidatura</label>
+        <input type="hidden" name="application_type" id="application_type" value="internal">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" data-tipo="internal" class="tipo-btn text-left flex flex-col gap-1 p-4 rounded-xl border-2 border-blue-700 bg-blue-50">
+            <span class="text-sm font-bold">Candidatura interna</span>
+            <span class="text-xs text-slate-500 leading-relaxed font-normal">Os alunos se candidatam pela própria plataforma e você acompanha a lista de candidatos.</span>
+          </button>
+          <button type="button" data-tipo="external" class="tipo-btn text-left flex flex-col gap-1 p-4 rounded-xl border border-slate-300 bg-white">
+            <span class="text-sm font-bold">Vaga externa</span>
+            <span class="text-xs text-slate-500 leading-relaxed font-normal">Os alunos são redirecionados para o sistema de candidatura da sua empresa.</span>
+          </button>
+        </div>
+        <div id="campo-externo" class="hidden">
+          <label for="vaga-link" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Link de candidatura externa</label>
+          <input id="vaga-link" name="external_url" type="url" placeholder="https://suaempresa.com.br/carreiras/vaga" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 border-t border-slate-100 pt-6">
+        <button type="submit" class="h-[46px] px-7 rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Publicar vaga</button>
+        <a href="/empresa/vagas/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Cancelar</a>
+      </div>
+
+    </form>
+  </main>
+
+<script src="{% static 'web_ui/api.js' %}"></script>
+<script>
+if (Company.requireAuth()) {
+  const btnAtivo = 'tipo-btn text-left flex flex-col gap-1 p-4 rounded-xl border-2 border-blue-700 bg-blue-50';
+  const btnInativo = 'tipo-btn text-left flex flex-col gap-1 p-4 rounded-xl border border-slate-300 bg-white';
+
+  document.querySelectorAll('.tipo-btn').forEach((btn) => btn.addEventListener('click', () => {
+    const tipo = btn.dataset.tipo;
+    document.getElementById('application_type').value = tipo;
+    document.querySelectorAll('.tipo-btn').forEach((b) => b.className = b.dataset.tipo === tipo ? btnAtivo : btnInativo);
+    document.getElementById('campo-externo').classList.toggle('hidden', tipo !== 'external');
+  }));
+
+  document.getElementById('form-vaga').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.currentTarget));
+    data.weekly_hours = Number(data.weekly_hours);
+    data.openings = Number(data.openings);
+    if (data.application_type !== 'external') delete data.external_url;
+    try {
+      const job = await Company.request('/api/v1/company/jobs/', {method: 'POST', body: JSON.stringify(data)});
+      window.location.assign(`/empresa/vagas/${job.id}/`);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  Company.request('/api/v1/company/profile/').then((company) => {
+    document.querySelectorAll('[data-company-initials]').forEach((el) => el.textContent = Company.initials(company.legal_name));
+  }).catch(() => {});
+}
+</script>
+</body>
+</html>
