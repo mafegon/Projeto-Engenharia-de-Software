@@ -43,8 +43,9 @@
   }
 
   function initials(name) {
-    return String(name || "Aluno")
-      .trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+    const normalized = String(name || "").trim();
+    if (!normalized) return "";
+    return normalized.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
   }
 
   window.Platform = {request, storeSession, requireAuth, initials, TOKEN_KEY, USER_KEY};
