@@ -21,10 +21,10 @@ Abaixo está o estado atual do nosso Backlog de histórias de usuário mapeado n
 | **US-04** | Publicação de Vaga | Essencial (MVP) | Concluído |
 | **US-06** | Visualização de Vagas | Essencial (MVP) | Concluído |
 | **US-08** | Candidatura / Interesse | Essencial (MVP) | Concluído |
-| **US-05** | Edição de Vaga | Desejável | 
-| **US-07** | Filtro de Vagas | Desejável | 
-| **US-09** | Acompanhamento de Candidatos | Desejável | 
-| **US-10** | Salvamento de Vagas (Favoritos) | Desejável |
+| **US-05** | Edição de Vaga | Desejável | A fazer | Mapeado no Backlog para futuras atualizações da plataforma. |
+| **US-07** | Filtro de Vagas | Desejável | Concluído | Entregue além do MVP planejado. |
+| **US-09** | Acompanhamento de Candidatos | Desejável | A fazer | Mapeado no Backlog para futuras atualizações da plataforma. | 
+| **US-10** | Salvamento de Vagas (Favoritos) | Desejável | A fazer | Mapeado no Backlog para futuras atualizações da plataforma. |
 
 ---
 
