@@ -1,14 +1,11 @@
 # Gestão de Processo
 
-## 11 Metodologia Adotada e Justificativa (Kanban)
+## 1.1 Metodologia Adotada e Justificativa (Kanban)
 Adotamos o **Kanban** como metodologia ágil para a gestão do desenvolvimento do nosso sistema. A escolha do Kanban justifica-se pelo contexto e limitações do projeto:
 
-* **Flexibilidade no fluxo de trabalho:** Como a equipe possui rotinas acadêmicas e profissionais paralelas, o Kanban permitiu que cada integrante puxasse tarefas de acordo com sua disponibilidade semanal,
-* sem a pressão de metas fixas e rígidas de tempo (comum nas Sprints do Scrum).
-* **Foco no fluxo contínuo:** Evitamos gargalos no desenvolvimento limitando o trabalho em progresso (*WIP - Work in Progress*). Dessa forma, uma funcionalidade do Django só era iniciada após a conclusão
-* ou revisão da anterior.
-* **Redução de reuniões formais:** O quadro visual eliminou a necessidade de ritos diários complexos, permitindo que a comunicação ocorresse de forma assíncrona pelo WhatsApp/Discord e síncrona diretamente
-* nas revisões de código.
+* **Flexibilidade no fluxo de trabalho:** Como a equipe possui rotinas acadêmicas e profissionais paralelas, o Kanban permitiu que cada integrante puxasse tarefas de acordo com sua disponibilidade semanal, sem a pressão de metas fixas e rígidas de tempo (comum nas Sprints do Scrum).
+* **Foco no fluxo contínuo:** Evitamos gargalos no desenvolvimento limitando o trabalho em progresso (*WIP - Work in Progress*). Dessa forma, uma funcionalidade do Django só era iniciada após a conclusão ou revisão da anterior.
+* **Redução de reuniões formais:** O quadro visual eliminou a necessidade de ritos diários complexos, permitindo que a comunicação ocorresse de forma assíncrona pelo WhatsApp/Discord e síncrona diretamente nas revisões de código.
 
 ---
 
