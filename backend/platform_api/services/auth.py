@@ -1,4 +1,5 @@
 import re
+from secrets import compare_digest
 
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
@@ -13,16 +14,37 @@ TOKEN_SALT = "platform-api.access"
 REGISTRATION_PATTERN = re.compile(r"^\d{9}$")
 
 
-def issue_token(user_id: int) -> str:
-    return signing.dumps({"user_id": user_id}, salt=TOKEN_SALT, compress=True)
+def issue_token(repo: PlatformRepository, user) -> str:
+    return signing.dumps(
+        {
+            "user_id": user.id,
+            "email": user.email,
+            "registration": user.registration,
+            "generation": repo.generation,
+        },
+        salt=TOKEN_SALT,
+        compress=True,
+    )
 
 
-def read_token(token: str) -> int:
+def read_token(token: str, repo: PlatformRepository) -> int:
     try:
         value = signing.loads(token, salt=TOKEN_SALT, max_age=int(getattr(settings, "API_TOKEN_MAX_AGE", 86400)))
-        return int(value["user_id"])
+        user_id = int(value["user_id"])
+        generation = str(value["generation"])
+        email = str(value["email"])
+        registration = str(value["registration"])
     except (signing.BadSignature, KeyError, TypeError, ValueError) as exc:
         raise AuthenticationError("Token inválido ou expirado.") from exc
+    user = repo.get_user(user_id)
+    if (
+        not user
+        or not compare_digest(generation, repo.generation)
+        or not compare_digest(email, user.email)
+        or not compare_digest(registration, user.registration)
+    ):
+        raise AuthenticationError("Token inválido ou expirado.")
+    return user_id
 
 
 def register(repo: PlatformRepository, data: dict) -> tuple[dict, str]:
@@ -60,7 +82,7 @@ def register(repo: PlatformRepository, data: dict) -> tuple[dict, str]:
         email=email,
         password_hash=make_password(password),
     )
-    return user.public_dict(course), issue_token(user.id)
+    return user.public_dict(course), issue_token(repo, user)
 
 
 def login(repo: PlatformRepository, data: dict) -> tuple[dict, str]:
@@ -68,4 +90,4 @@ def login(repo: PlatformRepository, data: dict) -> tuple[dict, str]:
     user = repo.get_user_by_email(email)
     if not user or not check_password(str(data.get("password", "")), user.password_hash):
         raise AuthenticationError("E-mail ou senha inválidos.")
-    return user.public_dict(repo.get_course(user.course_code)), issue_token(user.id)
+    return user.public_dict(repo.get_course(user.course_code)), issue_token(repo, user)
