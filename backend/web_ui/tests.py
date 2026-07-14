@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.templatetags.static import static
 from django.test import SimpleTestCase, override_settings
@@ -38,6 +39,32 @@ class WebUiRouteTests(SimpleTestCase):
         self.assertContains(response, 'data-internship-slug="prodap"')
         self.assertContains(response, "Candidatar-se")
         self.assertEqual(resolve("/vagas/prodap/").kwargs, {"slug": "prodap"})
+
+    def test_internship_detail_starts_neutral_and_busy(self):
+        response = self.client.get("/vagas/prodap/")
+
+        self.assertNotContains(response, "PRODAP")
+        self.assertNotContains(response, ">PR<")
+        self.assertNotContains(response, "Estágio em Desenvolvimento Web")
+        self.assertContains(response, 'id="vaga-detalhes" aria-busy="true"')
+        self.assertContains(response, 'id="vaga-status" role="status" aria-live="polite"')
+        self.assertContains(response, "Carregando detalhes da vaga…")
+        self.assertContains(response, 'data-vaga-skeleton aria-hidden="true"')
+        self.assertContains(response, 'id="btn-candidatar" onclick="candidatar()" disabled')
+        self.assertContains(response, 'id="btn-salvar" onclick="alternarSalvar()" disabled')
+
+    def test_internship_detail_hydrates_and_handles_errors_inline(self):
+        source = self.client.get("/vagas/prodap/").content.decode()
+
+        self.assertIn("if (!vaga) return;", source)
+        self.assertIn("document.getElementById('btn-candidatar').disabled = false", source)
+        self.assertIn("document.getElementById('btn-salvar').disabled = false", source)
+        self.assertIn("setAttribute('aria-busy', 'false')", source)
+        self.assertIn("error.status === 401", source)
+        self.assertIn("error.status === 404", source)
+        self.assertIn("Vaga não encontrada.", source)
+        self.assertIn("Não foi possível carregar a vaga. Tente novamente mais tarde.", source)
+        self.assertNotIn("alert(error.message)", source)
 
     def test_profile_page_and_named_routes(self):
         response = self.client.get("/perfil/")
@@ -78,6 +105,13 @@ class WebUiRouteTests(SimpleTestCase):
         source = Path(script_path).read_text(encoding="utf-8")
         self.assertNotIn('String(name || "Aluno")', source)
         self.assertIn('if (!normalized) return "";', source)
+
+    def test_button_cursor_rules_cover_enabled_and_disabled_states(self):
+        source = (Path(settings.BASE_DIR) / "theme/static_src/src/styles.css").read_text(encoding="utf-8")
+        self.assertIn("button:not(:disabled):not(.cursor-default)", source)
+        self.assertIn("cursor: pointer;", source)
+        self.assertIn("button:disabled:not(.cursor-default)", source)
+        self.assertIn("cursor: not-allowed;", source)
 
     def test_backend_status_was_moved_out_of_home(self):
         response = self.client.get("/backend-status/", HTTP_ACCEPT="text/html")
