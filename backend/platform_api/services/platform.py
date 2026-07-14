@@ -26,6 +26,7 @@ def update_profile(repo: PlatformRepository, user_id: int, data: dict) -> dict:
             raise ValidationError(f"{field} deve ser texto.")
     for key, value in data.items():
         setattr(user, key, value.strip() if isinstance(value, str) else value)
+    repo.save_user(user)
     return user_data(repo, user_id)
 
 

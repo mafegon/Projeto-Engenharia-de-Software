@@ -182,6 +182,7 @@ def update_profile(repo: PlatformRepository, company_id: int, data: dict) -> dic
         raise ValidationError("Informe a razão social.")
     for key, value in cleaned.items():
         setattr(company, key, value)
+    repo.save_company(company)
     return company_data(repo, company_id)
 
 

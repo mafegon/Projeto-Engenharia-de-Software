@@ -13,6 +13,8 @@ from platform_api.domain.entities import (
 
 
 class InMemoryRepository:
+    persistence = "memory"
+
     def __init__(self):
         self._lock = RLock()
         self.reset()
@@ -63,6 +65,11 @@ class InMemoryRepository:
 
     def get_user(self, user_id: int) -> User | None:
         return self.users.get(user_id)
+
+    def save_user(self, user: User) -> User:
+        with self._lock:
+            self.users[user.id] = user
+            return user
 
     def get_user_by_email(self, email: str) -> User | None:
         normalized = email.strip().lower()
@@ -148,6 +155,11 @@ class InMemoryRepository:
 
     def get_company(self, company_id: int) -> Company | None:
         return self.companies.get(company_id)
+
+    def save_company(self, company: Company) -> Company:
+        with self._lock:
+            self.companies[company.id] = company
+            return company
 
     def get_company_by_email(self, email: str) -> Company | None:
         normalized = email.strip().lower()

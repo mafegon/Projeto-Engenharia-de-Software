@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 from platform_api.domain.errors import AuthenticationError, NotFoundError, ValidationError
 from platform_api.http import api_view, authenticated_user_id, ok, payload
-from platform_api.repositories.memory import repository
+from platform_api.repositories import repository
 from platform_api.services import company as company_service
 from platform_api.services.auth import login, register
 from platform_api.services.platform import apply, update_profile, user_data
@@ -31,13 +31,13 @@ def root(request):
     discovery = {
         "name": "Plataforma de Estágios Acadêmicos",
         "api_version": "v1",
-        "persistence": "memory",
+        "persistence": repository.persistence,
         "health": "/health/",
         "api_base": "/api/v1/",
     }
     if "text/html" in request.headers.get("Accept", "").lower():
         return HttpResponse(
-            """<!doctype html>
+            f"""<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -50,7 +50,7 @@ def root(request):
     <p>Backend em execução.</p>
     <dl>
       <dt>API version</dt><dd>v1</dd>
-      <dt>Persistence</dt><dd>memory</dd>
+      <dt>Persistence</dt><dd>{repository.persistence}</dd>
     </dl>
     <nav aria-label="Recursos técnicos">
       <a href="/health/">Health: /health/</a>
@@ -66,7 +66,7 @@ def root(request):
 
 @api_view({"GET"})
 def meta(request):
-    return ok({"name": "Plataforma de Estágios Acadêmicos", "version": "v1", "persistence": "memory"})
+    return ok({"name": "Plataforma de Estágios Acadêmicos", "version": "v1", "persistence": repository.persistence})
 
 
 @api_view({"GET"})

@@ -1,3 +1,3 @@
-from .memory import repository
+from .provider import repository
 
 __all__ = ["repository"]

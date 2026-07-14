@@ -4,7 +4,7 @@ from functools import wraps
 from django.http import HttpRequest, JsonResponse
 
 from platform_api.domain.errors import AuthenticationError, DomainError, ValidationError
-from platform_api.repositories.memory import repository
+from platform_api.repositories import repository
 from platform_api.services.auth import read_token
 from platform_api.services.company import read_token as read_company_token
 
