@@ -29,7 +29,7 @@ Abaixo está o estado atual do nosso Backlog de histórias de usuário mapeado n
 ---
 
 ## 1.3 Evidência do Fluxo (Quadro Kanban)
-
+![Evidência do Quadro do Trello](trello.jpg)
 
 ## 1.4 Lições Aprendidas
 
