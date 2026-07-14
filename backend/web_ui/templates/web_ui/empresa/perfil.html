@@ -35,7 +35,7 @@
       <p class="mt-1 text-sm text-slate-500">Estes dados são exibidos aos alunos nas suas vagas de estágio.</p>
     </div>
 
-    <form id="form-perfil" aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+    <form id="form-perfil" novalidate aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
 
       <p id="perfil-status" role="status" aria-live="polite" class="text-sm text-slate-600">Carregando perfil…</p>
 
@@ -116,8 +116,10 @@ function preencher(data) {
   document.querySelectorAll('[data-company-editable]').forEach((node) => node.disabled = false);
   document.getElementById('perfil-submit').disabled = false;
   document.getElementById('form-perfil').setAttribute('aria-busy', 'false');
-  document.getElementById('perfil-status').textContent = 'Perfil carregado';
-  document.getElementById('perfil-status').classList.add('sr-only');
+  const status = document.getElementById('perfil-status');
+  status.classList.remove('font-semibold', 'text-red-700');
+  status.textContent = 'Perfil carregado';
+  status.classList.add('sr-only');
 }
 
 function confirmacao() {
@@ -127,23 +129,41 @@ function confirmacao() {
   t = setTimeout(() => m.classList.add('hidden'), 3000);
 }
 
-document.getElementById('form-perfil').addEventListener('submit', async (event) => {
+function validarPerfil(form) {
+  const data = Object.fromEntries(new FormData(form));
+  return FormUI.validate(form, [
+    {name: 'legal_name', valid: String(data.legal_name || '').trim().length >= 2, message: 'Informe a razão social (mínimo de 2 caracteres).'},
+    {name: 'phone', valid: String(data.phone || '').length <= 30, message: 'O telefone deve ter no máximo 30 caracteres.'},
+    {name: 'address', valid: String(data.address || '').length <= 240, message: 'O endereço deve ter no máximo 240 caracteres.'},
+    {name: 'about', valid: String(data.about || '').length <= 3000, message: 'A descrição deve ter no máximo 3000 caracteres.'},
+  ]);
+}
+
+const formPerfilEmpresa = document.getElementById('form-perfil');
+formPerfilEmpresa.addEventListener('input', (event) => FormUI.clearFieldError(event.target));
+
+formPerfilEmpresa.addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!validarPerfil(event.currentTarget)) return;
   const button = document.getElementById('perfil-submit');
   button.disabled = true;
-  document.getElementById('perfil-status').classList.remove('sr-only');
-  document.getElementById('perfil-status').textContent = 'Salvando alterações…';
+  const status = document.getElementById('perfil-status');
+  status.classList.remove('sr-only', 'font-semibold', 'text-red-700');
+  status.classList.add('text-slate-600');
+  status.textContent = 'Salvando alterações…';
   const data = Object.fromEntries(new FormData(event.currentTarget));
   try {
     preencher(await Company.request('/api/v1/company/profile/', {method: 'PATCH', body: JSON.stringify(data)}));
     confirmacao();
-    document.getElementById('perfil-status').textContent = 'Alterações salvas';
+    status.textContent = 'Alterações salvas';
   } catch (error) {
     if (error.status === 401) {
       window.location.replace('/empresa/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
       return;
     }
-    document.getElementById('perfil-status').textContent = error.message;
+    status.classList.remove('text-slate-600');
+    status.classList.add('font-semibold', 'text-red-700');
+    status.textContent = error.message;
   } finally {
     button.disabled = false;
   }

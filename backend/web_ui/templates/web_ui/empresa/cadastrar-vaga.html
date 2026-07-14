@@ -36,7 +36,7 @@
       <p class="mt-1 text-sm text-slate-500">Preencha os dados da vaga de estágio. Ela ficará visível para os alunos da plataforma.</p>
     </div>
 
-    <form id="form-vaga" aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+    <form id="form-vaga" novalidate aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
 
       <p id="form-status" role="status" aria-live="polite" class="text-sm text-slate-600">Preparando formulário…</p>
 
@@ -153,12 +153,37 @@ if (Company.requireAuth()) {
     document.getElementById('campo-externo').classList.toggle('hidden', tipo !== 'external');
   }));
 
+  function validarVaga(form) {
+    const data = Object.fromEntries(new FormData(form));
+    const openings = Number(data.openings);
+    const checks = [
+      {name: 'title', valid: String(data.title || '').trim().length >= 3, message: 'Informe o título da vaga (mínimo de 3 caracteres).'},
+      {name: 'area', valid: !!data.area, message: 'Selecione a área da vaga.'},
+      {name: 'modality', valid: !!data.modality, message: 'Selecione a modalidade.'},
+      {name: 'weekly_hours', valid: !!data.weekly_hours, message: 'Selecione a carga horária.'},
+      {name: 'stipend', valid: String(data.stipend || '').trim().length > 0, message: 'Informe a bolsa mensal.'},
+      {name: 'location', valid: String(data.location || '').trim().length > 0, message: 'Informe a localidade.'},
+      {name: 'openings', valid: Number.isInteger(openings) && openings >= 1 && openings <= 100, message: 'Informe um número de vagas entre 1 e 100.'},
+      {name: 'description', valid: String(data.description || '').trim().length >= 10, message: 'Descreva a vaga com mais detalhes (mínimo de 10 caracteres).'},
+    ];
+    if (data.application_type === 'external') {
+      checks.push({name: 'external_url', valid: /^https?:\/\/.+/i.test(String(data.external_url || '').trim()), message: 'Informe um link HTTP(S) público de candidatura válido.'});
+    }
+    return FormUI.validate(form, checks);
+  }
+
+  formVaga.addEventListener('input', (event) => FormUI.clearFieldError(event.target));
+  formVaga.addEventListener('change', (event) => FormUI.clearFieldError(event.target));
+
   document.getElementById('form-vaga').addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (!validarVaga(event.currentTarget)) return;
     const button = document.getElementById('vaga-submit');
     button.disabled = true;
-    document.getElementById('form-status').classList.remove('sr-only');
-    document.getElementById('form-status').textContent = 'Publicando vaga…';
+    const status = document.getElementById('form-status');
+    status.classList.remove('sr-only', 'font-semibold', 'text-red-700');
+    status.classList.add('text-slate-600');
+    status.textContent = 'Publicando vaga…';
     const data = Object.fromEntries(new FormData(event.currentTarget));
     data.weekly_hours = Number(data.weekly_hours);
     data.openings = Number(data.openings);
@@ -171,7 +196,9 @@ if (Company.requireAuth()) {
         window.location.replace(companyLoginUrl());
         return;
       }
-      document.getElementById('form-status').textContent = error.message;
+      status.classList.remove('text-slate-600');
+      status.classList.add('font-semibold', 'text-red-700');
+      status.textContent = error.message;
       button.disabled = false;
     }
   });

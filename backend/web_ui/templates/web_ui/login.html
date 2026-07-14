@@ -32,7 +32,7 @@
       </div>
 
       <!-- Painel: Entrar -->
-      <form id="painel-entrar" class="flex flex-col gap-4">
+      <form id="painel-entrar" novalidate class="flex flex-col gap-4">
         <div>
           <label for="login-email" class="block text-[13px] font-semibold text-slate-700 mb-1.5">E-mail</label>
           <input id="login-email" name="email" type="email" required autocomplete="email" placeholder="voce@unifap.br" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
@@ -49,7 +49,7 @@
       </form>
 
       <!-- Painel: Cadastro -->
-      <form id="painel-cadastro" class="hidden flex-col gap-4">
+      <form id="painel-cadastro" novalidate class="hidden flex-col gap-4">
         <div>
           <label for="cadastro-nome" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Nome completo</label>
           <input id="cadastro-nome" name="full_name" type="text" required autocomplete="name" placeholder="Seu nome completo" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
@@ -133,8 +133,37 @@ async function carregarCursos() {
   }
 }
 
+function validarEntrar(form) {
+  const dados = Object.fromEntries(new FormData(form));
+  return FormUI.validate(form, [
+    {name: 'email', valid: FormUI.isEmail(dados.email), message: 'Informe um e-mail válido.'},
+    {name: 'password', valid: String(dados.password || '').length > 0, message: 'Informe sua senha.'},
+  ]);
+}
+
+function validarCadastro(form) {
+  const dados = Object.fromEntries(new FormData(form));
+  const nome = String(dados.full_name || '').trim();
+  const email = String(dados.email || '').trim().toLowerCase();
+  const senha = String(dados.password || '');
+  return FormUI.validate(form, [
+    {name: 'full_name', valid: nome.split(/\s+/).filter(Boolean).length >= 2, message: 'Informe seu nome completo (nome e sobrenome).'},
+    {name: 'course_code', valid: !!dados.course_code, message: 'Selecione o seu curso.'},
+    {name: 'registration', valid: /^\d{9}$/.test(String(dados.registration || '').trim()), message: 'A matrícula deve conter exatamente 9 dígitos.'},
+    {name: 'email', valid: FormUI.isEmail(email) && email.endsWith('@unifap.br'), message: 'Informe um e-mail institucional @unifap.br válido.'},
+    {name: 'password', valid: senha.length >= 8 && !/^\d+$/.test(senha), message: 'A senha deve ter ao menos 8 caracteres e não pode ser apenas numérica.'},
+  ]);
+}
+
+['painel-entrar', 'painel-cadastro'].forEach((id) => {
+  const form = document.getElementById(id);
+  form.addEventListener('input', (event) => FormUI.clearFieldError(event.target));
+  form.addEventListener('change', (event) => FormUI.clearFieldError(event.target));
+});
+
 document.getElementById('painel-entrar').addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!validarEntrar(event.currentTarget)) return;
   setFormState(event.currentTarget, true, 'Entrando…');
   const form = new FormData(event.currentTarget);
   try {
@@ -148,6 +177,7 @@ document.getElementById('painel-entrar').addEventListener('submit', async (event
 
 document.getElementById('painel-cadastro').addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!validarCadastro(event.currentTarget)) return;
   setFormState(event.currentTarget, true, 'Criando conta…');
   const form = new FormData(event.currentTarget);
   try {

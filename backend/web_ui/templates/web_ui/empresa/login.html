@@ -32,7 +32,7 @@
       </div>
 
       <!-- Painel: Entrar -->
-      <form id="painel-entrar" class="flex flex-col gap-4">
+      <form id="painel-entrar" novalidate class="flex flex-col gap-4">
         <div>
           <label for="login-email" class="block text-[13px] font-semibold text-slate-700 mb-1.5">E-mail corporativo</label>
           <input id="login-email" name="email" type="email" required autocomplete="email" placeholder="contato@suaempresa.com.br" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
@@ -49,7 +49,7 @@
       </form>
 
       <!-- Painel: Cadastro -->
-      <form id="painel-cadastro" class="hidden flex-col gap-4">
+      <form id="painel-cadastro" novalidate class="hidden flex-col gap-4">
         <div>
           <label for="cadastro-razao" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Razão social</label>
           <input id="cadastro-razao" name="legal_name" type="text" required placeholder="Nome da organização" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
@@ -121,8 +121,51 @@ function setFormState(form, busy, message = '') {
   status.classList.toggle('hidden', !message);
 }
 
+function cnpjValido(bruto) {
+  const texto = String(bruto || '').trim();
+  if (/[^0-9.\-/ ]/.test(texto)) return false;
+  const cnpj = texto.replace(/\D/g, '');
+  if (!/^\d{14}$/.test(cnpj) || new Set(cnpj).size === 1) return false;
+  const digito = (base, pesos) => {
+    const soma = base.split('').reduce((acc, n, i) => acc + Number(n) * pesos[i], 0);
+    const valor = 11 - (soma % 11);
+    return valor >= 10 ? 0 : valor;
+  };
+  const primeiro = digito(cnpj.slice(0, 12), [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  const segundo = digito(cnpj.slice(0, 13), [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  return cnpj.slice(-2) === `${primeiro}${segundo}`;
+}
+
+function validarEntrar(form) {
+  const dados = Object.fromEntries(new FormData(form));
+  return FormUI.validate(form, [
+    {name: 'email', valid: FormUI.isEmail(dados.email), message: 'Informe um e-mail corporativo válido.'},
+    {name: 'password', valid: String(dados.password || '').length > 0, message: 'Informe sua senha.'},
+  ]);
+}
+
+function validarCadastro(form) {
+  const dados = Object.fromEntries(new FormData(form));
+  const razao = String(dados.legal_name || '').trim();
+  const senha = String(dados.password || '');
+  return FormUI.validate(form, [
+    {name: 'legal_name', valid: razao.length >= 2, message: 'Informe a razão social (mínimo de 2 caracteres).'},
+    {name: 'cnpj', valid: cnpjValido(dados.cnpj), message: 'Informe um CNPJ válido.'},
+    {name: 'sector', valid: !!dados.sector, message: 'Selecione o setor da empresa.'},
+    {name: 'email', valid: FormUI.isEmail(dados.email), message: 'Informe um e-mail corporativo válido.'},
+    {name: 'password', valid: senha.length >= 8 && !/^\d+$/.test(senha), message: 'A senha deve ter ao menos 8 caracteres e não pode ser apenas numérica.'},
+  ]);
+}
+
+['painel-entrar', 'painel-cadastro'].forEach((id) => {
+  const form = document.getElementById(id);
+  form.addEventListener('input', (event) => FormUI.clearFieldError(event.target));
+  form.addEventListener('change', (event) => FormUI.clearFieldError(event.target));
+});
+
 document.getElementById('painel-entrar').addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!validarEntrar(event.currentTarget)) return;
   setFormState(event.currentTarget, true, 'Entrando…');
   const form = new FormData(event.currentTarget);
   try {
@@ -136,6 +179,7 @@ document.getElementById('painel-entrar').addEventListener('submit', async (event
 
 document.getElementById('painel-cadastro').addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!validarCadastro(event.currentTarget)) return;
   setFormState(event.currentTarget, true, 'Cadastrando empresa…');
   const form = new FormData(event.currentTarget);
   try {

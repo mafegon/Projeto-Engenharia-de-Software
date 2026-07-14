@@ -35,7 +35,7 @@
       <p class="mt-1 text-sm text-slate-500">Mantenha seus dados atualizados — eles são exibidos às empresas quando você se candidata.</p>
     </div>
 
-    <form id="form-perfil" aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+    <form id="form-perfil" novalidate aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
 
       <p id="perfil-status" role="status" aria-live="polite" class="sr-only">Carregando perfil</p>
 
@@ -118,7 +118,9 @@ function preencherPerfil(data) {
   document.querySelectorAll('[data-profile-editable]').forEach((item) => item.disabled = false);
   document.getElementById('perfil-submit').disabled = false;
   document.getElementById('form-perfil').setAttribute('aria-busy', 'false');
-  document.getElementById('perfil-status').textContent = 'Perfil carregado';
+  const status = document.getElementById('perfil-status');
+  status.classList.remove('font-semibold', 'text-red-700');
+  status.textContent = 'Perfil carregado';
 }
 
 function falharCarregamentoPerfil() {
@@ -134,8 +136,20 @@ function salvarConfirmacao() {
   t = setTimeout(() => m.classList.add('hidden'), 3000);
 }
 
-document.getElementById('form-perfil').addEventListener('submit', async (event) => {
+function validarPerfil(form) {
+  const data = Object.fromEntries(new FormData(form));
+  return FormUI.validate(form, [
+    {name: 'full_name', valid: String(data.full_name || '').trim().length >= 3, message: 'Informe seu nome completo.'},
+    {name: 'bio', valid: String(data.bio || '').length <= 3000, message: 'A descrição deve ter no máximo 3000 caracteres.'},
+  ]);
+}
+
+const formPerfilAluno = document.getElementById('form-perfil');
+formPerfilAluno.addEventListener('input', (event) => FormUI.clearFieldError(event.target));
+
+formPerfilAluno.addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!validarPerfil(event.currentTarget)) return;
   const button = document.getElementById('perfil-submit');
   button.disabled = true;
   const data = Object.fromEntries(new FormData(event.currentTarget));
@@ -146,6 +160,7 @@ document.getElementById('form-perfil').addEventListener('submit', async (event) 
     const status = document.getElementById('perfil-status');
     status.textContent = error.message;
     status.classList.remove('sr-only');
+    status.classList.add('text-sm', 'font-semibold', 'text-red-700');
     if (error.status === 401) window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
   } finally {
     button.disabled = false;
