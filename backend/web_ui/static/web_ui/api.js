@@ -80,6 +80,54 @@
     }
   }
 
+  const FormUI = {
+    showFieldError(input, message) {
+      if (!input) return;
+      input.style.borderColor = "#dc2626";
+      input.setAttribute("aria-invalid", "true");
+      let el = input.parentElement.querySelector("[data-field-error]");
+      if (!el) {
+        el = document.createElement("p");
+        el.setAttribute("data-field-error", "");
+        el.setAttribute("role", "alert");
+        el.className = "mt-1.5 text-xs font-semibold text-red-700";
+        input.parentElement.append(el);
+      }
+      el.textContent = message;
+    },
+    clearFieldError(input) {
+      if (!input) return;
+      input.style.borderColor = "";
+      input.removeAttribute("aria-invalid");
+      const el = input.parentElement.querySelector("[data-field-error]");
+      if (el) el.remove();
+    },
+    clearErrors(form) {
+      form.querySelectorAll("[data-field-error]").forEach((el) => el.remove());
+      form.querySelectorAll('[aria-invalid="true"]').forEach((input) => {
+        input.style.borderColor = "";
+        input.removeAttribute("aria-invalid");
+      });
+    },
+    validate(form, checks) {
+      FormUI.clearErrors(form);
+      let firstInvalid = null;
+      checks.forEach(({name, valid, message}) => {
+        if (valid) return;
+        const input = form.elements[name];
+        FormUI.showFieldError(input, message);
+        if (!firstInvalid) firstInvalid = input;
+      });
+      if (firstInvalid) firstInvalid.focus();
+      return !firstInvalid;
+    },
+    isEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+    },
+  };
+
+  window.FormUI = FormUI;
+
   window.Platform = {
     request: (path, options) => request(path, options, TOKEN_KEY),
     storeSession: (data, persistent) => storeSession(TOKEN_KEY, USER_KEY, data, persistent),
