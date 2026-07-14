@@ -4,6 +4,16 @@
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
+@layer base {
+  button:not(:disabled):not(.cursor-default) {
+    cursor: pointer;
+  }
+
+  button:disabled:not(.cursor-default) {
+    cursor: not-allowed;
+  }
+}
+
 /**
   * A catch-all path to Django template files, JavaScript, and Python files
   * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.

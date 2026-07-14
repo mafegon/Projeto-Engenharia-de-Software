@@ -136,21 +136,28 @@ function salvarConfirmacao() {
 
 document.getElementById('form-perfil').addEventListener('submit', async (event) => {
   event.preventDefault();
+  const button = document.getElementById('perfil-submit');
+  button.disabled = true;
   const data = Object.fromEntries(new FormData(event.currentTarget));
   try {
     preencherPerfil(await Platform.request('/api/v1/me/profile/', {method: 'PATCH', body: JSON.stringify(data)}));
     salvarConfirmacao();
   } catch (error) {
-    alert(error.message);
+    const status = document.getElementById('perfil-status');
+    status.textContent = error.message;
+    status.classList.remove('sr-only');
+    if (error.status === 401) window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
+  } finally {
+    button.disabled = false;
   }
 });
 
 if (Platform.requireAuth()) {
   Platform.request('/api/v1/me/profile/').then(preencherPerfil).catch((error) => {
-    if (error.status === 401) window.location.replace('/');
+    if (error.status === 401) window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
     else {
       falharCarregamentoPerfil();
-      alert(error.message);
+      document.getElementById('perfil-status').classList.remove('sr-only');
     }
   });
 }

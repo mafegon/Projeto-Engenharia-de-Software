@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil da Empresa — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased">
+
+  <!-- Cabeçalho -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 min-h-16 py-3 sm:py-0 flex flex-col items-start gap-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/empresa/vagas/" class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight text-slate-900">Estágios Acadêmicos</span>
+      </a>
+      <nav class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
+        <a href="/empresa/vagas/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Minhas vagas</a>
+        <a href="/empresa/perfil/" class="text-sm font-bold text-blue-700">Perfil da empresa</a>
+        <a href="/empresa/perfil/" aria-label="Perfil da empresa">
+          <div data-company-initials aria-hidden="true" class="w-9 h-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px] animate-pulse"></div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-[760px] mx-auto px-4 sm:px-6 pt-8 pb-16 flex flex-col gap-5">
+
+    <div>
+      <h1 class="text-2xl font-extrabold tracking-tight">Perfil da empresa</h1>
+      <p class="mt-1 text-sm text-slate-500">Estes dados são exibidos aos alunos nas suas vagas de estágio.</p>
+    </div>
+
+    <form id="form-perfil" aria-busy="true" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+
+      <p id="perfil-status" role="status" aria-live="polite" class="text-sm text-slate-600">Carregando perfil…</p>
+
+      <div class="flex flex-col items-start sm:flex-row sm:items-center gap-5 border-b border-slate-100 pb-6">
+        <div data-company-initials aria-hidden="true" class="w-[72px] h-[72px] rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-2xl shrink-0 animate-pulse"></div>
+        <div>
+          <p id="perfil-cabecalho-nome" class="text-[17px] font-extrabold">—</p>
+          <p id="perfil-cabecalho-setor" class="text-[13px] text-slate-500">—</p>
+          <button type="button" disabled title="Envio de logotipo ainda não disponível" class="mt-2 h-8 px-3.5 whitespace-nowrap border border-slate-300 rounded-lg bg-white text-slate-700 font-semibold text-xs">Alterar logotipo</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="perfil-razao" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Razão social</label>
+          <input id="perfil-razao" name="legal_name" type="text" required disabled data-company-editable class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="perfil-cnpj" class="block text-[13px] font-semibold text-slate-700 mb-1.5">CNPJ</label>
+          <input id="perfil-cnpj" type="text" readonly class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm bg-slate-50 outline-none">
+        </div>
+        <div>
+          <label for="perfil-setor" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Setor</label>
+          <select id="perfil-setor" name="sector" disabled data-company-editable class="w-full h-11 border border-slate-300 rounded-[10px] px-2.5 text-sm bg-white outline-none focus:border-blue-700">
+            <option>Tecnologia da Informação</option>
+            <option>Energia</option>
+            <option>Setor público</option>
+            <option>Financeiro</option>
+            <option>Meio Ambiente</option>
+          </select>
+        </div>
+        <div>
+          <label for="perfil-email" class="block text-[13px] font-semibold text-slate-700 mb-1.5">E-mail corporativo</label>
+          <input id="perfil-email" type="email" readonly class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm bg-slate-50 outline-none">
+        </div>
+        <div>
+          <label for="perfil-telefone" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Telefone</label>
+          <input id="perfil-telefone" name="phone" type="tel" disabled data-company-editable class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+        <div>
+          <label for="perfil-endereco" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Endereço</label>
+          <input id="perfil-endereco" name="address" type="text" disabled data-company-editable class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
+        </div>
+      </div>
+
+      <div>
+        <label for="perfil-sobre" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Sobre a empresa</label>
+        <textarea id="perfil-sobre" name="about" rows="4" disabled data-company-editable class="w-full border border-slate-300 rounded-[10px] px-3.5 py-3 text-sm leading-relaxed outline-none resize-y focus:border-blue-700"></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 border-t border-slate-100 pt-6">
+        <button id="perfil-submit" type="submit" disabled class="h-[46px] px-7 rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px] disabled:opacity-60">Salvar alterações</button>
+        <a href="/empresa/vagas/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Cancelar</a>
+        <span id="msg-salvo" class="hidden text-[13px] font-bold text-emerald-700">Alterações salvas</span>
+      </div>
+
+    </form>
+  </main>
+
+<script src="{% static 'web_ui/api.js' %}"></script>
+<script>
+let t;
+
+function preencher(data) {
+  document.querySelectorAll('[data-company-initials]').forEach((node) => {
+    node.textContent = Company.initials(data.legal_name);
+    node.classList.remove('animate-pulse');
+  });
+  document.getElementById('perfil-cabecalho-nome').textContent = data.legal_name;
+  document.getElementById('perfil-cabecalho-setor').textContent = [data.sector, data.address].filter(Boolean).join(' · ');
+  document.getElementById('perfil-razao').value = data.legal_name;
+  document.getElementById('perfil-cnpj').value = data.cnpj;
+  document.getElementById('perfil-setor').value = data.sector;
+  document.getElementById('perfil-email').value = data.email;
+  document.getElementById('perfil-telefone').value = data.phone || '';
+  document.getElementById('perfil-endereco').value = data.address || '';
+  document.getElementById('perfil-sobre').value = data.about || '';
+  document.querySelectorAll('[data-company-editable]').forEach((node) => node.disabled = false);
+  document.getElementById('perfil-submit').disabled = false;
+  document.getElementById('form-perfil').setAttribute('aria-busy', 'false');
+  document.getElementById('perfil-status').textContent = 'Perfil carregado';
+  document.getElementById('perfil-status').classList.add('sr-only');
+}
+
+function confirmacao() {
+  const m = document.getElementById('msg-salvo');
+  m.classList.remove('hidden');
+  clearTimeout(t);
+  t = setTimeout(() => m.classList.add('hidden'), 3000);
+}
+
+document.getElementById('form-perfil').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const button = document.getElementById('perfil-submit');
+  button.disabled = true;
+  document.getElementById('perfil-status').classList.remove('sr-only');
+  document.getElementById('perfil-status').textContent = 'Salvando alterações…';
+  const data = Object.fromEntries(new FormData(event.currentTarget));
+  try {
+    preencher(await Company.request('/api/v1/company/profile/', {method: 'PATCH', body: JSON.stringify(data)}));
+    confirmacao();
+    document.getElementById('perfil-status').textContent = 'Alterações salvas';
+  } catch (error) {
+    if (error.status === 401) {
+      window.location.replace('/empresa/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
+      return;
+    }
+    document.getElementById('perfil-status').textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+
+if (Company.requireAuth()) {
+  Company.request('/api/v1/company/profile/').then(preencher).catch((error) => {
+    document.getElementById('form-perfil').setAttribute('aria-busy', 'false');
+    document.getElementById('perfil-status').textContent = 'Não foi possível carregar o perfil. Tente novamente.';
+    document.querySelectorAll('[data-company-initials]').forEach((node) => node.classList.remove('animate-pulse'));
+    if (error.status === 401) window.location.replace('/empresa/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
+  });
+}
+</script>
+</body>
+</html>

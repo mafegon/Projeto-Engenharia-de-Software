@@ -1,10 +1,12 @@
 import math
+from datetime import date
 
 from django.http import HttpResponse
 
 from platform_api.domain.errors import AuthenticationError, NotFoundError, ValidationError
 from platform_api.http import api_view, authenticated_user_id, ok, payload
 from platform_api.repositories.memory import repository
+from platform_api.services import company as company_service
 from platform_api.services.auth import login, register
 from platform_api.services.platform import apply, update_profile, user_data
 
@@ -101,7 +103,11 @@ def profile(request, user_id):
 
 @api_view({"GET"})
 def internships(request):
-    items = repository.list_internships()
+    today = date.today()
+    items = [
+        item for item in repository.list_internships()
+        if item.status == "active" and item.application_deadline >= today
+    ]
     query = request.GET.get("q", "").strip().casefold()
     area = request.GET.get("area", "").strip().casefold()
     modality = request.GET.get("modality", "").strip().lower()
@@ -160,3 +166,37 @@ def saved(request, slug, user_id):
 @api_view({"POST"}, authenticated=True)
 def applications(request, slug, user_id):
     return ok(apply(repository, user_id, slug, payload(request)), status=201)
+
+
+@api_view({"POST"})
+def company_register(request):
+    company, token = company_service.register(repository, payload(request))
+    return ok({"company": company, "access_token": token, "token_type": "Bearer"}, status=201)
+
+
+@api_view({"POST"})
+def company_login(request):
+    company, token = company_service.login(repository, payload(request))
+    return ok({"company": company, "access_token": token, "token_type": "Bearer"})
+
+
+@api_view({"GET", "PATCH"}, company=True)
+def company_profile(request, company_id):
+    if request.method == "GET":
+        return ok(company_service.company_data(repository, company_id))
+    return ok(company_service.update_profile(repository, company_id, payload(request)))
+
+
+@api_view({"GET", "POST"}, company=True)
+def company_jobs(request, company_id):
+    if request.method == "GET":
+        return ok(company_service.dashboard(repository, company_id))
+    return ok(company_service.create_job(repository, company_id, payload(request)), status=201)
+
+
+@api_view({"GET", "DELETE"}, company=True)
+def company_job_detail(request, job_id, company_id):
+    if request.method == "GET":
+        return ok(company_service.job_detail(repository, company_id, job_id))
+    company_service.delete_job(repository, company_id, job_id)
+    return HttpResponse(status=204)

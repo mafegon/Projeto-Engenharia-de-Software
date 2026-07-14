@@ -35,6 +35,10 @@ def apply(repo: PlatformRepository, user_id: int, slug: str, data: dict) -> dict
     item = repo.get_internship(slug)
     if not item:
         raise NotFoundError("Vaga não encontrada.")
+    if item.status != "active":
+        raise ValidationError("Esta vaga está encerrada.")
+    if item.application_type != "internal":
+        raise ValidationError("Esta vaga recebe candidaturas somente pelo link externo informado.")
     user = repo.get_user(user_id)
     if not user:
         raise NotFoundError("Usuário não encontrado.")

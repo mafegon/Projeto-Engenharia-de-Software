@@ -32,7 +32,7 @@
 
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight">Vagas de estágio</h1>
-      <p id="resultado-contagem" class="mt-1 text-sm text-slate-500">6 vagas encontradas em Macapá e região</p>
+      <p id="resultado-contagem" class="mt-1 text-sm text-slate-500">Buscando vagas…</p>
     </div>
 
     <!-- Filtros e pesquisa -->
@@ -61,7 +61,8 @@
     </form>
 
     <!-- Lista de vagas -->
-    <div class="flex flex-col gap-3" id="lista-vagas"></div>
+    <p id="lista-status" role="status" aria-live="polite" class="text-sm text-slate-600">Carregando vagas…</p>
+    <div class="flex flex-col gap-3" id="lista-vagas" aria-busy="true"></div>
 
   </main>
 
@@ -71,50 +72,86 @@ if (Platform.requireAuth()) {
   const MODALIDADES = {onsite: 'Presencial', hybrid: 'Híbrido', remote: 'Remoto'};
   let vagas = [];
 
+  function studentLoginUrl() {
+    return '/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+  }
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = String(text ?? '');
+    return node;
+  }
+
+  function tag(text, className) {
+    return element('span', `px-2.5 py-1 rounded-full text-xs font-semibold ${className}`, text);
+  }
+
   function renderVagas() {
     document.getElementById('resultado-contagem').textContent = `${vagas.length} ${vagas.length === 1 ? 'vaga encontrada' : 'vagas encontradas'} em Macapá e região`;
-    document.getElementById('lista-vagas').innerHTML = vagas.map(v => `
-      <div class="bg-white border border-slate-200 rounded-[14px] px-4 sm:px-6 py-5 flex flex-col sm:flex-row gap-4 items-start hover:border-blue-300 hover:shadow-lg hover:shadow-blue-700/10 transition">
-        <div class="w-[46px] h-[46px] rounded-[10px] bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-sm shrink-0">${v.initials}</div>
-        <div class="flex-1 flex flex-col gap-2">
-          <div>
-            <a href="/vagas/${v.slug}/" class="text-base font-bold text-slate-900 hover:text-blue-700">${v.title}</a>
-            <p class="text-[13px] text-slate-500">${v.company} · ${v.location}</p>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">${v.area}</span>
-            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">${MODALIDADES[v.modality]}</span>
-            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">${v.weekly_hours}h semanais</span>
-            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">${v.stipend}</span>
-          </div>
-        </div>
-        <div class="w-full sm:w-auto flex flex-row sm:flex-col justify-between items-center sm:items-end gap-2.5 shrink-0">
-          <button title="Salvar vaga" aria-label="${v.saved ? 'Remover vaga salva' : 'Salvar vaga'}" onclick="alternarSalvar('${v.slug}')" class="w-[38px] h-[38px] border border-slate-200 hover:border-blue-300 rounded-[10px] bg-white flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="${v.saved ? '#1d4ed8' : 'none'}" stroke="#1d4ed8" stroke-width="2"><path d="M6 3h12v18l-6-4.5L6 21z"/></svg>
-          </button>
-          <span class="text-xs text-slate-400">${v.published}</span>
-        </div>
-      </div>`).join('');
+    const list = document.getElementById('lista-vagas');
+    list.replaceChildren();
+    if (!vagas.length) {
+      list.append(element('p', 'bg-white border border-dashed border-slate-300 rounded-[14px] p-8 text-sm text-slate-500 text-center', 'Nenhuma vaga encontrada com estes filtros.'));
+      return;
+    }
+    vagas.forEach((vaga) => {
+      const card = element('article', 'bg-white border border-slate-200 rounded-[14px] px-4 sm:px-6 py-5 flex flex-col sm:flex-row gap-4 items-start hover:border-blue-300 hover:shadow-lg hover:shadow-blue-700/10 transition');
+      card.append(element('div', 'w-[46px] h-[46px] rounded-[10px] bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-sm shrink-0', vaga.initials));
+      const content = element('div', 'flex-1 min-w-0 flex flex-col gap-2');
+      const heading = element('div');
+      const title = element('a', 'text-base font-bold text-slate-900 hover:text-blue-700 break-words', vaga.title);
+      title.href = `/vagas/${encodeURIComponent(vaga.slug)}/`;
+      heading.append(title, element('p', 'text-[13px] text-slate-500', `${vaga.company} · ${vaga.location}`));
+      const tags = element('div', 'flex flex-wrap gap-2');
+      tags.append(
+        tag(vaga.area, 'bg-blue-100 text-blue-800'),
+        tag(MODALIDADES[vaga.modality] || vaga.modality, 'bg-slate-100 text-slate-600'),
+        tag(`${vaga.weekly_hours}h semanais`, 'bg-slate-100 text-slate-600'),
+        tag(vaga.stipend, 'bg-emerald-50 text-emerald-700'),
+      );
+      content.append(heading, tags);
+      const actions = element('div', 'w-full sm:w-auto flex flex-row sm:flex-col justify-between items-center sm:items-end gap-2.5 shrink-0');
+      const save = element('button', 'w-[38px] h-[38px] border border-slate-200 hover:border-blue-300 rounded-[10px] bg-white flex items-center justify-center text-blue-700 text-lg', vaga.saved ? '★' : '☆');
+      save.type = 'button';
+      save.title = 'Salvar vaga';
+      save.setAttribute('aria-label', vaga.saved ? 'Remover vaga salva' : 'Salvar vaga');
+      save.addEventListener('click', () => alternarSalvar(vaga.slug, save));
+      actions.append(save, element('span', 'text-xs text-slate-400', vaga.published));
+      card.append(content, actions);
+      list.append(card);
+    });
   }
 
   async function carregarVagas(params = new URLSearchParams()) {
     try {
       vagas = await Platform.request('/api/v1/internships/?' + params.toString());
       renderVagas();
+      document.getElementById('lista-vagas').setAttribute('aria-busy', 'false');
+      document.getElementById('lista-status').textContent = 'Vagas carregadas';
+      document.getElementById('lista-status').classList.add('sr-only');
     } catch (error) {
-      if (error.status === 401) window.location.replace('/');
-      else alert(error.message);
+      document.getElementById('lista-vagas').setAttribute('aria-busy', 'false');
+      document.getElementById('lista-status').textContent = 'Não foi possível carregar as vagas. Tente novamente.';
+      document.getElementById('lista-status').classList.remove('sr-only');
+      if (error.status === 401) window.location.replace(studentLoginUrl());
     }
   }
 
-  async function alternarSalvar(slug) {
+  async function alternarSalvar(slug, button) {
     const vaga = vagas.find((item) => item.slug === slug);
+    if (!vaga) return;
+    if (button) button.disabled = true;
     try {
       await Platform.request(`/api/v1/internships/${slug}/saved/`, {method: vaga.saved ? 'DELETE' : 'PUT'});
       vaga.saved = !vaga.saved;
       renderVagas();
     } catch (error) {
-      alert(error.message);
+      document.getElementById('lista-status').textContent = error.message;
+      document.getElementById('lista-status').classList.remove('sr-only');
+      if (error.status === 401) window.location.replace(studentLoginUrl());
+    } finally {
+      if (button) button.disabled = false;
     }
   }
   window.alternarSalvar = alternarSalvar;

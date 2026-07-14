@@ -15,10 +15,10 @@
 
     <!-- Coluna do formulário -->
     <div class="p-6 sm:p-8 md:p-11 flex flex-col gap-6">
-      <div class="flex items-center gap-2.5">
+      <a href="/" class="flex items-center gap-2.5">
         <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
         <span class="font-extrabold tracking-tight">Estágios Acadêmicos</span>
-      </div>
+      </a>
 
       <div>
         <h1 class="text-[26px] font-extrabold tracking-tight">Bem-vindo(a), aluno(a)</h1>
@@ -44,7 +44,8 @@
           </div>
           <input id="login-password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
         </div>
-        <button type="submit" class="flex items-center justify-center h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Entrar</button>
+        <button type="submit" class="flex items-center justify-center h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px] disabled:opacity-60">Entrar</button>
+        <p role="status" aria-live="polite" class="hidden text-sm text-red-700"></p>
       </form>
 
       <!-- Painel: Cadastro -->
@@ -73,15 +74,19 @@
           <label for="cadastro-password" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Senha</label>
           <input id="cadastro-password" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" class="w-full h-11 border border-slate-300 rounded-[10px] px-3.5 text-sm outline-none focus:border-blue-700">
         </div>
-        <button type="submit" class="flex items-center justify-center h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Criar conta</button>
+        <button type="submit" class="flex items-center justify-center h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px] disabled:opacity-60">Criar conta</button>
+        <p role="status" aria-live="polite" class="hidden text-sm text-red-700"></p>
       </form>
 
       <p class="text-xs text-slate-400 leading-relaxed">Ao continuar, você concorda com os termos de uso da plataforma.</p>
     </div>
 
     <!-- Coluna da imagem -->
-    <div class="relative bg-slate-100 min-h-[260px] md:min-h-[560px] flex items-center justify-center">
-      <span class="font-mono text-xs text-slate-400 text-center px-8">Imagem institucional<br>(campus / alunos)</span>
+    <div class="hidden md:block relative bg-slate-100 min-h-[560px]">
+      <picture>
+        <source media="(min-width: 768px)" srcset="{% static 'web_ui/alunos.jpg' %}">
+        <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Alunos ao redor de uma mesa, olhando para um computador" loading="lazy" decoding="async" fetchpriority="low" class="absolute inset-0 w-full h-full object-cover">
+      </picture>
     </div>
 
   </div>
@@ -99,40 +104,58 @@ function mostrarAba(aba) {
 
 function nextPage() {
   const next = new URLSearchParams(window.location.search).get('next');
-  return next && next.startsWith('/') && !next.startsWith('//') ? next : '/vagas/';
+  return Platform.safeNextPath(next);
+}
+
+function setFormState(form, busy, message = '') {
+  const button = form.querySelector('[type="submit"]');
+  const status = form.querySelector('[role="status"]');
+  form.setAttribute('aria-busy', String(busy));
+  button.disabled = busy;
+  status.textContent = message;
+  status.classList.toggle('hidden', !message);
 }
 
 async function carregarCursos() {
   try {
     const cursos = await Platform.request('/api/v1/courses/');
     const select = document.getElementById('cadastro-curso');
-    cursos.forEach((curso) => select.insertAdjacentHTML('beforeend', `<option value="${curso.code}">${curso.name}</option>`));
+    cursos.forEach((curso) => {
+      const option = document.createElement('option');
+      option.value = curso.code;
+      option.textContent = curso.name;
+      select.append(option);
+    });
   } catch (error) {
-    alert(error.message);
+    const status = document.querySelector('#painel-cadastro [role="status"]');
+    status.textContent = error.message;
+    status.classList.remove('hidden');
   }
 }
 
 document.getElementById('painel-entrar').addEventListener('submit', async (event) => {
   event.preventDefault();
+  setFormState(event.currentTarget, true, 'Entrando…');
   const form = new FormData(event.currentTarget);
   try {
     const session = await Platform.request('/api/v1/auth/login/', {method: 'POST', body: JSON.stringify(Object.fromEntries(form))});
     Platform.storeSession(session);
     window.location.assign(nextPage());
   } catch (error) {
-    alert(error.message);
+    setFormState(event.currentTarget, false, error.message);
   }
 });
 
 document.getElementById('painel-cadastro').addEventListener('submit', async (event) => {
   event.preventDefault();
+  setFormState(event.currentTarget, true, 'Criando conta…');
   const form = new FormData(event.currentTarget);
   try {
     const session = await Platform.request('/api/v1/auth/register/', {method: 'POST', body: JSON.stringify(Object.fromEntries(form))});
     Platform.storeSession(session);
     window.location.assign(nextPage());
   } catch (error) {
-    alert(error.message);
+    setFormState(event.currentTarget, false, error.message);
   }
 });
 
@@ -142,9 +165,13 @@ document.getElementById('esqueci-senha').addEventListener('click', async (event)
   if (!email) return;
   try {
     const result = await Platform.request('/api/v1/auth/password-reset/', {method: 'POST', body: JSON.stringify({email})});
-    alert(result.message);
+    const status = document.querySelector('#painel-entrar [role="status"]');
+    status.textContent = result.message;
+    status.classList.remove('hidden');
   } catch (error) {
-    alert(error.message);
+    const status = document.querySelector('#painel-entrar [role="status"]');
+    status.textContent = error.message;
+    status.classList.remove('hidden');
   }
 });
 

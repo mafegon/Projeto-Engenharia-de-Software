@@ -28,9 +28,10 @@
     </div>
   </header>
 
-  <main class="max-w-[1120px] mx-auto px-4 sm:px-6 pt-6 pb-16 flex flex-col gap-4">
+  <main id="vaga-detalhes" aria-busy="true" class="max-w-[1120px] mx-auto px-4 sm:px-6 pt-6 pb-16 flex flex-col gap-4">
 
     <a href="/vagas/" class="text-[13px] font-semibold text-slate-500 hover:text-blue-700">← Voltar para a listagem de vagas</a>
+    <p id="vaga-status" role="status" aria-live="polite" class="sr-only">Carregando detalhes da vaga…</p>
 
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start">
 
@@ -38,38 +39,32 @@
       <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-7">
 
         <div class="flex flex-col sm:flex-row gap-4 items-start">
-          <div id="vaga-iniciais" class="w-14 h-14 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-[17px] shrink-0">PR</div>
-          <div>
-            <h1 id="vaga-titulo" class="text-2xl font-extrabold tracking-tight">Estágio em Desenvolvimento Web</h1>
-            <p id="vaga-empresa-local" class="mt-1.5 text-sm text-slate-500">PRODAP — Centro de Gestão da Tecnologia da Informação do Amapá · Centro, Macapá</p>
+          <div id="vaga-iniciais" class="w-14 h-14 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-extrabold text-[17px] shrink-0"><span data-vaga-skeleton aria-hidden="true" class="block w-8 h-5 rounded bg-slate-200 animate-pulse"></span></div>
+          <div class="w-full">
+            <h1 id="vaga-titulo" class="text-2xl font-extrabold tracking-tight"><span data-vaga-skeleton aria-hidden="true" class="block w-3/4 max-w-md h-7 rounded bg-slate-200 animate-pulse"></span></h1>
+            <p id="vaga-empresa-local" class="mt-1.5 text-sm text-slate-500"><span data-vaga-skeleton aria-hidden="true" class="block w-2/3 max-w-lg h-4 rounded bg-slate-200 animate-pulse"></span></p>
             <div class="flex flex-wrap gap-2 mt-2.5">
-              <span id="vaga-area" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Tecnologia da Informação</span>
-              <span id="vaga-modalidade-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">Híbrido</span>
-              <span id="vaga-carga-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">30h semanais</span>
-              <span id="vaga-bolsa-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">R$ 1.000/mês</span>
+              <span id="vaga-area" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"><span data-vaga-skeleton aria-hidden="true" class="block w-28 h-4 rounded-full bg-slate-200 animate-pulse"></span></span>
+              <span id="vaga-modalidade-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600"><span data-vaga-skeleton aria-hidden="true" class="block w-16 h-4 rounded-full bg-slate-200 animate-pulse"></span></span>
+              <span id="vaga-carga-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600"><span data-vaga-skeleton aria-hidden="true" class="block w-20 h-4 rounded-full bg-slate-200 animate-pulse"></span></span>
+              <span id="vaga-bolsa-tag" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700"><span data-vaga-skeleton aria-hidden="true" class="block w-20 h-4 rounded-full bg-slate-200 animate-pulse"></span></span>
             </div>
           </div>
         </div>
 
         <section>
           <h2 class="text-base font-extrabold mb-2.5">Descrição da vaga</h2>
-          <p id="vaga-descricao" class="text-sm text-slate-700 leading-7">Oportunidade de estágio na equipe de desenvolvimento de sistemas do PRODAP, atuando na construção e manutenção de aplicações web utilizadas por órgãos do Governo do Estado do Amapá. O estagiário participará do ciclo completo de desenvolvimento, com acompanhamento de desenvolvedores seniores, em projetos com Python, Django e PostgreSQL.</p>
+          <p id="vaga-descricao" class="text-sm text-slate-700 leading-7"><span data-vaga-skeleton aria-hidden="true" class="block w-full h-20 rounded bg-slate-100 animate-pulse"></span></p>
         </section>
 
         <section>
           <h2 class="text-base font-extrabold mb-2.5">Requisitos</h2>
-          <ul id="vaga-requisitos" class="list-disc pl-5 flex flex-col gap-2 text-sm text-slate-700 leading-relaxed">
-            <li>Estar cursando a partir do 4º semestre de Ciência da Computação ou áreas afins</li>
-            <li>Conhecimentos básicos em lógica de programação e banco de dados</li>
-            <li>Familiaridade com Python (Django é um diferencial)</li>
-            <li>Noções de HTML, CSS e Git</li>
-            <li>Disponibilidade de 30h semanais</li>
-          </ul>
+          <ul id="vaga-requisitos" class="list-disc pl-5 flex flex-col gap-2 text-sm text-slate-700 leading-relaxed"><li data-vaga-skeleton aria-hidden="true" class="list-none -ml-5 w-full h-20 rounded bg-slate-100 animate-pulse"></li></ul>
         </section>
 
         <section>
           <h2 class="text-base font-extrabold mb-2.5">Sobre a empresa</h2>
-          <p id="vaga-sobre-empresa" class="text-sm text-slate-700 leading-7">O PRODAP é o órgão responsável pela gestão da tecnologia da informação e comunicação do Governo do Estado do Amapá, desenvolvendo e mantendo os sistemas utilizados pela administração pública estadual.</p>
+          <p id="vaga-sobre-empresa" class="text-sm text-slate-700 leading-7"><span data-vaga-skeleton aria-hidden="true" class="block w-full h-16 rounded bg-slate-100 animate-pulse"></span></p>
         </section>
 
       </div>
@@ -79,20 +74,20 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
           <div>
             <p class="text-[13px] text-slate-500">Bolsa mensal</p>
-            <p id="vaga-bolsa" class="text-2xl font-extrabold tracking-tight">R$ 1.000 <span class="text-[13px] font-semibold text-slate-500">+ auxílio-transporte</span></p>
+            <p id="vaga-bolsa" class="text-2xl font-extrabold tracking-tight"><span data-vaga-skeleton aria-hidden="true" class="block w-3/4 h-7 mt-1 rounded bg-slate-200 animate-pulse"></span></p>
           </div>
 
           <div class="border-t border-slate-100 pt-4 flex flex-col gap-2.5 text-[13px]">
-            <div class="flex justify-between"><span class="text-slate-500">Modalidade</span><span id="vaga-modalidade" class="font-semibold">Híbrido</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Carga horária</span><span id="vaga-carga" class="font-semibold">30h semanais</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Local</span><span id="vaga-local" class="font-semibold">Centro, Macapá</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Publicada</span><span id="vaga-publicada" class="font-semibold">há 2 dias</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Inscrições até</span><span id="vaga-prazo" class="font-semibold">31/07/2026</span></div>
+            <div class="flex justify-between gap-4"><span class="text-slate-500">Modalidade</span><span id="vaga-modalidade" class="font-semibold"><span data-vaga-skeleton aria-hidden="true" class="block w-16 h-4 rounded bg-slate-200 animate-pulse"></span></span></div>
+            <div class="flex justify-between gap-4"><span class="text-slate-500">Carga horária</span><span id="vaga-carga" class="font-semibold"><span data-vaga-skeleton aria-hidden="true" class="block w-20 h-4 rounded bg-slate-200 animate-pulse"></span></span></div>
+            <div class="flex justify-between gap-4"><span class="text-slate-500">Local</span><span id="vaga-local" class="font-semibold"><span data-vaga-skeleton aria-hidden="true" class="block w-24 h-4 rounded bg-slate-200 animate-pulse"></span></span></div>
+            <div class="flex justify-between gap-4"><span class="text-slate-500">Publicada</span><span id="vaga-publicada" class="font-semibold"><span data-vaga-skeleton aria-hidden="true" class="block w-16 h-4 rounded bg-slate-200 animate-pulse"></span></span></div>
+            <div class="flex justify-between gap-4"><span class="text-slate-500">Inscrições até</span><span id="vaga-prazo" class="font-semibold"><span data-vaga-skeleton aria-hidden="true" class="block w-20 h-4 rounded bg-slate-200 animate-pulse"></span></span></div>
           </div>
 
           <div class="flex flex-col gap-2.5">
-            <button id="btn-candidatar" onclick="candidatar()" class="w-full h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-[15px]">Candidatar-se</button>
-            <button id="btn-salvar" onclick="alternarSalvar()" class="w-full h-11 rounded-[10px] border border-slate-300 bg-white text-slate-700 font-bold text-sm">Salvar vaga</button>
+            <button id="btn-candidatar" onclick="candidatar()" disabled class="w-full h-[46px] rounded-[10px] bg-blue-700 hover:bg-blue-800 disabled:opacity-60 text-white font-bold text-[15px]">Candidatar-se</button>
+            <button id="btn-salvar" onclick="alternarSalvar()" disabled class="w-full h-11 rounded-[10px] border border-slate-300 bg-white disabled:opacity-60 text-slate-700 font-bold text-sm">Salvar vaga</button>
           </div>
         </div>
 
@@ -115,6 +110,8 @@ function dataBr(data) {
 }
 
 function renderVaga() {
+  if (!vaga) return;
+
   const modalidade = MODALIDADES[vaga.modality];
   document.getElementById('vaga-iniciais').textContent = vaga.initials;
   document.getElementById('vaga-titulo').textContent = vaga.title;
@@ -124,18 +121,34 @@ function renderVaga() {
   document.getElementById('vaga-carga-tag').textContent = `${vaga.weekly_hours}h semanais`;
   document.getElementById('vaga-bolsa-tag').textContent = vaga.stipend;
   document.getElementById('vaga-descricao').textContent = vaga.description;
-  document.getElementById('vaga-requisitos').innerHTML = vaga.requirements.map((item) => `<li>${item}</li>`).join('');
+  const requisitos = document.getElementById('vaga-requisitos');
+  requisitos.replaceChildren(...vaga.requirements.map((item) => {
+    const requisito = document.createElement('li');
+    requisito.textContent = item;
+    return requisito;
+  }));
   document.getElementById('vaga-sobre-empresa').textContent = `${vaga.company} oferece esta oportunidade de estágio para estudantes que atendam aos requisitos informados.`;
-  document.getElementById('vaga-bolsa').innerHTML = `${vaga.stipend.replace('/mês', '')} <span class="text-[13px] font-semibold text-slate-500">+ auxílio-transporte</span>`;
+  const bolsa = document.getElementById('vaga-bolsa');
+  bolsa.textContent = `${vaga.stipend.replace('/mês', '')} `;
+  const auxilio = document.createElement('span');
+  auxilio.className = 'text-[13px] font-semibold text-slate-500';
+  auxilio.textContent = '+ auxílio-transporte';
+  bolsa.appendChild(auxilio);
   document.getElementById('vaga-modalidade').textContent = modalidade;
   document.getElementById('vaga-carga').textContent = `${vaga.weekly_hours}h semanais`;
   document.getElementById('vaga-local').textContent = vaga.location;
   document.getElementById('vaga-publicada').textContent = vaga.published;
   document.getElementById('vaga-prazo').textContent = dataBr(vaga.application_deadline);
   atualizarSalvar();
+  document.getElementById('btn-candidatar').disabled = false;
+  document.getElementById('btn-salvar').disabled = false;
+  document.getElementById('vaga-detalhes').setAttribute('aria-busy', 'false');
+  document.getElementById('vaga-status').textContent = '';
 }
 
 function atualizarSalvar() {
+  if (!vaga) return;
+
   const b = document.getElementById('btn-salvar');
   b.textContent = vaga.saved ? 'Vaga salva' : 'Salvar vaga';
   b.className = vaga.saved
@@ -144,6 +157,8 @@ function atualizarSalvar() {
 }
 
 async function candidatar() {
+  if (!vaga) return;
+
   try {
     await Platform.request(`/api/v1/internships/${slug}/applications/`, {method: 'POST', body: '{}'});
     const b = document.getElementById('btn-candidatar');
@@ -151,18 +166,51 @@ async function candidatar() {
     b.className = 'w-full h-[46px] rounded-[10px] bg-emerald-700 text-white font-bold text-[15px] cursor-default';
     b.disabled = true;
   } catch (error) {
-    alert(error.message);
+    mostrarErroAcao(error);
   }
 }
 
 async function alternarSalvar() {
+  if (!vaga) return;
+
   try {
     await Platform.request(`/api/v1/internships/${slug}/saved/`, {method: vaga.saved ? 'DELETE' : 'PUT'});
     vaga.saved = !vaga.saved;
     atualizarSalvar();
   } catch (error) {
-    alert(error.message);
+    mostrarErroAcao(error);
   }
+}
+
+function exibirStatus(mensagem) {
+  const status = document.getElementById('vaga-status');
+  status.textContent = mensagem;
+  status.className = 'rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700';
+}
+
+function mostrarErroCarregamento(error) {
+  document.getElementById('vaga-detalhes').setAttribute('aria-busy', 'false');
+  document.querySelectorAll('[data-vaga-skeleton]').forEach((elemento) => elemento.classList.remove('animate-pulse'));
+  document.getElementById('btn-candidatar').disabled = true;
+  document.getElementById('btn-salvar').disabled = true;
+
+  if (error.status === 401) {
+    window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
+    return;
+  }
+
+  exibirStatus(error.status === 404
+    ? 'Vaga não encontrada.'
+    : 'Não foi possível carregar a vaga. Tente novamente mais tarde.');
+}
+
+function mostrarErroAcao(error) {
+  if (error.status === 401) {
+    window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
+    return;
+  }
+
+  exibirStatus('Não foi possível concluir a ação. Tente novamente.');
 }
 
 if (Platform.requireAuth()) {
@@ -177,9 +225,7 @@ if (Platform.requireAuth()) {
     avatar.classList.remove('animate-pulse');
   }).catch((error) => {
     document.querySelector('[data-user-initials]').classList.remove('animate-pulse');
-    if (error.status === 401) window.location.replace('/');
-    else if (error.status === 404) window.location.replace('/vagas/');
-    else alert(error.message);
+    mostrarErroCarregamento(error);
   });
 }
 </script>
