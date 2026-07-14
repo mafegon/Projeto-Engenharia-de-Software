@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -103,11 +105,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = (
+    os.getenv("DATABASE_URL", "").strip()
+    or os.getenv("PROJETO_ESTAGIOS_DATABASE_URL", "").strip()
+)
+DATABASES = {
+    "default": dj_database_url.config(
+        default=DATABASE_URL or f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=60,
+        conn_health_checks=True,
+        ssl_require=DATABASE_URL.startswith(("postgres://", "postgresql://")),
+    )
+}
 
-# The current backend is deliberately persistence-free. DATABASE_URL is kept as
-# the future integration contract, but no connection is opened in this phase.
-DATABASES = {}
+# Memory remains available for isolated demos and the existing API contract
+# tests. Set this to "django" together with DATABASE_URL to persist in
+# PostgreSQL/Supabase (or omit DATABASE_URL to exercise the ORM with SQLite).
+PLATFORM_REPOSITORY = os.getenv(
+    "PLATFORM_REPOSITORY", "django" if DATABASE_URL else "memory"
+).strip().lower()
+if PLATFORM_REPOSITORY not in {"memory", "django"}:
+    raise RuntimeError("PLATFORM_REPOSITORY deve ser 'memory' ou 'django'.")
 
 
 # Password validation
