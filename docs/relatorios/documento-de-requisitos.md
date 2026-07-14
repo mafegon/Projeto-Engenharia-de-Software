@@ -1,17 +1,17 @@
 # Documento de Requisitos
-##1 Descrição do problema
-##1.1 Problema
+## 1 Descrição do problema
+## 1.1 Problema
 Alunos de instituições de ensino técnico e superior precisam encontrar oportunidades de estágio de forma clara e centralizada. Ao mesmo tempo, empresas e organizações concedentes precisam divulgar vagas e alcançar candidatos compatíveis com suas necessidades.
 
 Atualmente, a divulgação de vagas pode ocorrer por canais dispersos, dificultando a consulta pelos alunos e o acompanhamento pelas organizações.
 
-##1.2 Usuário-alvo
+## 1.2 Usuário-alvo
 
 Alunos: usuários que buscam oportunidades de estágio.
 Empresas e organizações concedentes: usuários que publicam vagas e acompanham interessados.
 Equipe acadêmica: interessados no acompanhamento e avaliação do projeto.
 
-##2 Requisitos Funcionais
+## 2 Requisitos Funcionais
 - **RF-01:** o sistema deve permitir o cadastro de alunos.
 - **RF-02:** o sistema deve permitir o login de alunos cadastrados.
 - **RF-03:** o sistema deve permitir o cadastro de empresas ou organizações concedentes.
