@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalhes da Vaga — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased" data-job-id="{{ job_id }}">
+
+  <!-- Cabeçalho -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 min-h-16 py-3 sm:py-0 flex flex-col items-start gap-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/empresa/vagas/" class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight text-slate-900">Estágios Acadêmicos</span>
+      </a>
+      <nav class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
+        <a href="/empresa/vagas/" class="text-sm font-bold text-blue-700">Minhas vagas</a>
+        <a href="/empresa/perfil/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Perfil da empresa</a>
+        <a href="/empresa/perfil/" aria-label="Perfil da empresa">
+          <div data-company-initials aria-hidden="true" class="w-9 h-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px] animate-pulse"></div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="vaga-detalhes" aria-busy="true" class="max-w-[1120px] mx-auto px-4 sm:px-6 pt-6 pb-16 flex flex-col gap-5">
+
+    <p id="pagina-status" role="status" aria-live="polite" class="text-sm text-slate-600">Carregando detalhes da vaga…</p>
+
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <div class="flex flex-col gap-2">
+        <a href="/empresa/vagas/" class="text-[13px] font-semibold text-slate-500 hover:text-blue-700">← Voltar para minhas vagas</a>
+        <div class="flex items-center gap-3 flex-wrap">
+          <h1 id="vaga-titulo" class="text-2xl font-extrabold tracking-tight">Carregando…</h1>
+          <span id="vaga-status"></span>
+        </div>
+        <p id="vaga-meta" class="text-sm text-slate-500"></p>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <button id="btn-remover" onclick="pedirRemocao()" disabled class="h-[42px] px-5 border border-red-200 hover:bg-red-50 hover:border-red-400 rounded-[10px] bg-white text-red-700 font-bold text-[13px] disabled:opacity-60">Remover vaga</button>
+      </div>
+    </div>
+
+    <!-- Confirmação de remoção -->
+    <div id="confirmar-remocao" class="hidden bg-red-50 border border-red-200 rounded-[14px] px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+      <div class="flex flex-col gap-0.5">
+        <span class="text-sm font-bold text-red-700">Remover esta vaga?</span>
+        <span class="text-[13px] text-red-900/80">A vaga deixará de ser exibida aos alunos. Esta ação não pode ser desfeita.</span>
+      </div>
+      <div class="flex gap-2.5">
+        <button id="btn-confirmar-remocao" onclick="confirmarRemocao()" class="h-[38px] px-[18px] rounded-[10px] bg-red-600 hover:bg-red-700 text-white font-bold text-[13px] disabled:opacity-60">Sim, remover</button>
+        <button onclick="cancelarRemocao()" class="h-[38px] px-[18px] border border-slate-300 hover:border-slate-400 rounded-[10px] bg-white text-slate-700 font-bold text-[13px]">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- Estado removido -->
+    <div id="estado-removido" class="hidden bg-white border border-dashed border-slate-300 rounded-[14px] p-12 text-center">
+      <p class="text-[15px] font-bold text-slate-700">Vaga removida</p>
+      <p class="mt-2 text-sm text-slate-500">Ela não está mais visível para os alunos. <a href="/empresa/vagas/" class="font-semibold text-blue-700 hover:text-blue-800">Voltar para minhas vagas</a></p>
+    </div>
+
+    <!-- Conteúdo -->
+    <div id="conteudo" class="hidden grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5 items-start">
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 flex flex-col gap-6">
+        <div id="vaga-tags" class="flex flex-wrap gap-2"></div>
+        <section>
+          <h2 class="text-base font-extrabold mb-2.5">Descrição da vaga</h2>
+          <p id="vaga-descricao" class="text-sm text-slate-700 leading-7"></p>
+        </section>
+        <section id="secao-requisitos">
+          <h2 class="text-base font-extrabold mb-2.5">Requisitos</h2>
+          <p id="vaga-requisitos" class="text-sm text-slate-700 leading-7"></p>
+        </section>
+        <section id="secao-link" class="hidden">
+          <h2 class="text-base font-extrabold mb-2.5">Candidatura externa</h2>
+          <a id="vaga-link" href="#" target="_blank" rel="noopener" class="text-sm font-semibold text-blue-700 hover:text-blue-800 break-all"></a>
+        </section>
+      </div>
+
+      <!-- Candidatos -->
+      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+          <h2 class="text-base font-extrabold">Candidatos à vaga</h2>
+          <span id="candidatos-total" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">0</span>
+        </div>
+        <div id="lista-candidatos" class="flex flex-col divide-y divide-slate-100"></div>
+      </div>
+
+    </div>
+  </main>
+
+<script src="{% static 'web_ui/api.js' %}"></script>
+<script>
+const jobId = document.body.dataset.jobId;
+const MODALIDADES = {onsite: 'Presencial', hybrid: 'Híbrido', remote: 'Remoto'};
+const TIPOS = {internal: 'Candidatura interna', external: 'Vaga externa'};
+
+function companyLoginUrl() {
+  return '/empresa/?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+}
+
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = String(text ?? '');
+  return node;
+}
+
+function tag(text, className) {
+  return element('span', `px-2.5 py-1 rounded-full text-xs font-semibold ${className}`, text);
+}
+
+function statusCandidato(status) {
+  const map = {'Novo': 'bg-emerald-50 text-emerald-700', 'Em análise': 'bg-amber-100 text-amber-800', 'Visualizado': 'bg-slate-100 text-slate-500'};
+  return element('span', `px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${map[status] || 'bg-slate-100 text-slate-500'}`, status);
+}
+
+function renderCandidatos(candidates) {
+  const list = document.getElementById('lista-candidatos');
+  list.replaceChildren();
+  if (!candidates.length) {
+    list.append(element('p', 'px-5 py-8 text-sm text-slate-500 text-center', 'Nenhum candidato até o momento.'));
+    return;
+  }
+  candidates.forEach((candidate) => {
+    const row = element('div', 'px-5 py-4 flex items-center gap-3 hover:bg-slate-50');
+    const avatar = element('div', 'w-10 h-10 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px] shrink-0', candidate.initials);
+    const info = element('div', 'flex-1 flex flex-col min-w-0');
+    info.append(
+      element('span', 'text-sm font-bold truncate', candidate.full_name),
+      element('span', 'text-xs text-slate-500 truncate', `${candidate.course} · ${candidate.semester}`),
+      element('span', 'text-[11px] text-slate-400', `Candidatou-se ${candidate.applied_ago}`),
+    );
+    row.append(avatar, info, statusCandidato(candidate.status));
+    list.append(row);
+  });
+}
+
+function renderVaga(job) {
+  document.getElementById('vaga-titulo').textContent = job.title;
+  const status = document.getElementById('vaga-status');
+  status.replaceChildren(element('span', job.status === 'active'
+    ? 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700'
+    : 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500', job.status === 'active' ? 'Ativa' : 'Encerrada'));
+  document.getElementById('vaga-meta').textContent = `Publicada ${job.published} · ${TIPOS[job.application_type] || ''}`;
+  document.getElementById('vaga-tags').replaceChildren(
+    tag(job.area, 'bg-blue-100 text-blue-800'),
+    tag(MODALIDADES[job.modality] || job.modality, 'bg-slate-100 text-slate-600'),
+    tag(`${job.weekly_hours}h semanais`, 'bg-slate-100 text-slate-600'),
+    tag(job.stipend, 'bg-emerald-50 text-emerald-700'),
+    tag(job.location, 'bg-slate-100 text-slate-600'),
+  );
+  document.getElementById('vaga-descricao').textContent = job.description;
+  document.getElementById('secao-requisitos').classList.toggle('hidden', !job.requirements);
+  document.getElementById('vaga-requisitos').textContent = job.requirements || '';
+  const external = job.application_type === 'external' && /^https?:\/\//i.test(job.external_url || '');
+  document.getElementById('secao-link').classList.toggle('hidden', !external);
+  if (external) {
+    const link = document.getElementById('vaga-link');
+    link.href = job.external_url;
+    link.textContent = job.external_url;
+  }
+  const candidates = Array.isArray(job.candidates) ? job.candidates : [];
+  document.getElementById('candidatos-total').textContent = candidates.length;
+  renderCandidatos(candidates);
+  document.getElementById('conteudo').classList.remove('hidden');
+  document.getElementById('btn-remover').disabled = false;
+  document.getElementById('vaga-detalhes').setAttribute('aria-busy', 'false');
+  document.getElementById('pagina-status').textContent = 'Detalhes da vaga carregados';
+  document.getElementById('pagina-status').classList.add('sr-only');
+}
+
+function pedirRemocao() {
+  document.getElementById('confirmar-remocao').classList.remove('hidden');
+}
+function cancelarRemocao() {
+  document.getElementById('confirmar-remocao').classList.add('hidden');
+}
+async function confirmarRemocao() {
+  const button = document.getElementById('btn-confirmar-remocao');
+  button.disabled = true;
+  document.getElementById('pagina-status').classList.remove('sr-only');
+  document.getElementById('pagina-status').textContent = 'Removendo vaga…';
+  try {
+    await Company.request(`/api/v1/company/jobs/${jobId}/`, {method: 'DELETE'});
+    document.getElementById('confirmar-remocao').classList.add('hidden');
+    document.getElementById('conteudo').classList.add('hidden');
+    document.getElementById('btn-remover').classList.add('hidden');
+    document.getElementById('estado-removido').classList.remove('hidden');
+    document.getElementById('pagina-status').textContent = 'Vaga removida';
+  } catch (error) {
+    if (error.status === 401) {
+      window.location.replace(companyLoginUrl());
+      return;
+    }
+    document.getElementById('pagina-status').textContent = 'Não foi possível remover a vaga. Tente novamente.';
+  } finally {
+    button.disabled = false;
+  }
+}
+window.pedirRemocao = pedirRemocao;
+window.cancelarRemocao = cancelarRemocao;
+window.confirmarRemocao = confirmarRemocao;
+
+if (Company.requireAuth()) {
+  Promise.all([
+    Company.request(`/api/v1/company/jobs/${jobId}/`),
+    Company.request('/api/v1/company/profile/'),
+  ]).then(([job, company]) => {
+    document.querySelectorAll('[data-company-initials]').forEach((node) => {
+      node.textContent = Company.initials(company.legal_name);
+      node.classList.remove('animate-pulse');
+    });
+    renderVaga(job);
+  }).catch((error) => {
+    document.getElementById('vaga-detalhes').setAttribute('aria-busy', 'false');
+    document.getElementById('vaga-titulo').textContent = error.status === 404 ? 'Vaga não encontrada' : 'Detalhes indisponíveis';
+    document.querySelectorAll('[data-company-initials]').forEach((node) => node.classList.remove('animate-pulse'));
+    document.getElementById('pagina-status').textContent = error.status === 404
+      ? 'Vaga não encontrada.'
+      : 'Não foi possível carregar a vaga. Tente novamente.';
+    if (error.status === 401) window.location.replace(companyLoginUrl());
+  });
+}
+</script>
+</body>
+</html>

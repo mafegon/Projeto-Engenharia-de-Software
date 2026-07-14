@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minhas Vagas — Estágios Acadêmicos</title>
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#f5f7fb] font-sans text-slate-900 antialiased">
+
+  <!-- Cabeçalho -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 min-h-16 py-3 sm:py-0 flex flex-col items-start gap-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/empresa/vagas/" class="flex items-center gap-2.5">
+        <div class="w-[34px] h-[34px] rounded-[9px] bg-blue-700 text-white flex items-center justify-center font-extrabold text-[17px]">E</div>
+        <span class="font-extrabold tracking-tight text-slate-900">Estágios Acadêmicos</span>
+      </a>
+      <nav class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-6">
+        <a href="/empresa/vagas/" class="text-sm font-bold text-blue-700">Minhas vagas</a>
+        <a href="/empresa/perfil/" class="text-sm font-semibold text-slate-500 hover:text-blue-700">Perfil da empresa</a>
+        <a href="/empresa/perfil/" aria-label="Perfil da empresa">
+          <div data-company-initials aria-hidden="true" class="w-9 h-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[13px] animate-pulse"></div>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-[1120px] mx-auto px-4 sm:px-6 pt-8 pb-16 flex flex-col gap-5">
+
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <div>
+        <h1 class="text-2xl font-extrabold tracking-tight">Minhas vagas</h1>
+        <p id="resumo" class="mt-1 text-sm text-slate-500">Carregando…</p>
+      </div>
+      <a href="/empresa/vagas/nova/" class="flex items-center gap-2 h-11 px-[22px] rounded-[10px] bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+        Cadastrar vaga
+      </a>
+    </div>
+
+    <!-- Métricas -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="bg-white border border-slate-200 rounded-[14px] px-5 py-4 flex flex-col gap-0.5">
+        <span class="text-[13px] font-semibold text-slate-500">Vagas ativas</span>
+        <span id="stat-ativas" class="text-[26px] font-extrabold tracking-tight">—</span>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-[14px] px-5 py-4 flex flex-col gap-0.5">
+        <span class="text-[13px] font-semibold text-slate-500">Candidatos no total</span>
+        <span id="stat-candidatos" class="text-[26px] font-extrabold tracking-tight">—</span>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-[14px] px-5 py-4 flex flex-col gap-0.5">
+        <span class="text-[13px] font-semibold text-slate-500">Novos candidatos</span>
+        <span id="stat-novos" class="text-[26px] font-extrabold tracking-tight text-blue-700">—</span>
+      </div>
+    </div>
+
+    <!-- Lista de vagas -->
+    <p id="vagas-status" role="status" aria-live="polite" class="text-sm text-slate-600">Carregando vagas…</p>
+    <div id="lista-vagas" aria-busy="true" class="flex flex-col gap-3"></div>
+
+  </main>
+
+<script src="{% static 'web_ui/api.js' %}"></script>
+<script>
+const MODALIDADES = {onsite: 'Presencial', hybrid: 'Híbrido', remote: 'Remoto'};
+const TIPOS = {internal: 'Candidatura interna', external: 'Vaga externa — redirecionamento'};
+
+function companyLoginUrl() {
+  return '/empresa/?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+}
+
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = String(text ?? '');
+  return node;
+}
+
+function badgeStatus(status) {
+  return element('span', status === 'active'
+    ? 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700'
+    : 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500',
+  status === 'active' ? 'Ativa' : 'Encerrada');
+}
+
+function tag(text, className) {
+  return element('span', `px-2.5 py-1 rounded-full text-xs font-semibold ${className}`, text);
+}
+
+function renderVagas(jobs) {
+  const list = document.getElementById('lista-vagas');
+  list.replaceChildren();
+  if (!jobs.length) {
+    const empty = element('div', 'bg-white border border-dashed border-slate-300 rounded-[14px] p-8 sm:p-12 text-center');
+    empty.append(
+      element('p', 'text-[15px] font-bold text-slate-700', 'Nenhuma vaga cadastrada ainda'),
+      element('p', 'mt-2 text-sm text-slate-500', 'Clique em “Cadastrar vaga” para publicar sua primeira oportunidade.'),
+    );
+    list.append(empty);
+    return;
+  }
+  jobs.forEach((job) => {
+    const card = element('article', 'bg-white border border-slate-200 rounded-[14px] px-4 sm:px-6 py-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center hover:border-blue-300 hover:shadow-lg hover:shadow-blue-700/10 transition');
+    const content = element('div', 'flex-1 min-w-0 flex flex-col gap-2');
+    const heading = element('div', 'flex items-center gap-2.5 flex-wrap');
+    const title = element('a', 'text-base font-bold text-slate-900 hover:text-blue-700 break-words', job.title);
+    title.href = `/empresa/vagas/${encodeURIComponent(job.id)}/`;
+    heading.append(title, badgeStatus(job.status));
+    const tags = element('div', 'flex flex-wrap gap-2');
+    tags.append(
+      tag(job.area, 'bg-blue-100 text-blue-800'),
+      tag(MODALIDADES[job.modality] || job.modality, 'bg-slate-100 text-slate-600'),
+      tag(`${job.weekly_hours}h semanais`, 'bg-slate-100 text-slate-600'),
+      tag(job.stipend, 'bg-emerald-50 text-emerald-700'),
+    );
+    content.append(heading, tags, element('span', 'text-xs text-slate-400', `Publicada ${job.published} · ${TIPOS[job.application_type] || ''}`));
+    const actions = element('div', 'w-full sm:w-auto flex items-center justify-between sm:justify-end gap-5 shrink-0');
+    const count = element('div', 'flex flex-col items-center');
+    count.append(element('span', 'text-xl font-extrabold text-blue-700', job.candidate_count), element('span', 'text-[11px] font-semibold text-slate-500', 'candidatos'));
+    const details = element('a', 'flex items-center justify-center h-[38px] px-[18px] border border-slate-300 hover:border-blue-700 hover:text-blue-700 rounded-[10px] bg-white text-slate-700 font-bold text-[13px]', 'Detalhes');
+    details.href = `/empresa/vagas/${encodeURIComponent(job.id)}/`;
+    actions.append(count, details);
+    card.append(content, actions);
+    list.append(card);
+  });
+}
+
+function failLoading(error) {
+  document.getElementById('lista-vagas').setAttribute('aria-busy', 'false');
+  document.getElementById('vagas-status').textContent = 'Não foi possível carregar as vagas. Tente novamente.';
+  document.getElementById('resumo').textContent = 'Não foi possível carregar o resumo das vagas.';
+  document.querySelectorAll('[data-company-initials]').forEach((node) => node.classList.remove('animate-pulse'));
+  if (error.status === 401) window.location.replace(companyLoginUrl());
+}
+
+if (Company.requireAuth()) {
+  Company.request('/api/v1/company/jobs/').then((data) => {
+    document.querySelectorAll('[data-company-initials]').forEach((node) => {
+      node.textContent = Company.initials(data.company.legal_name);
+      node.classList.remove('animate-pulse');
+    });
+    const ativas = data.stats.active_jobs;
+    document.getElementById('resumo').textContent = `${data.company.legal_name} · ${ativas} ${ativas === 1 ? 'vaga ativa' : 'vagas ativas'}`;
+    document.getElementById('stat-ativas').textContent = data.stats.active_jobs;
+    document.getElementById('stat-candidatos').textContent = data.stats.total_candidates;
+    document.getElementById('stat-novos').textContent = data.stats.new_candidates;
+    renderVagas(data.jobs);
+    document.getElementById('lista-vagas').setAttribute('aria-busy', 'false');
+    document.getElementById('vagas-status').textContent = 'Vagas carregadas';
+    document.getElementById('vagas-status').classList.add('sr-only');
+  }).catch(failLoading);
+}
+</script>
+</body>
+</html>

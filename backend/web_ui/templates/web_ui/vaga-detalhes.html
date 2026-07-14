@@ -195,7 +195,7 @@ function mostrarErroCarregamento(error) {
   document.getElementById('btn-salvar').disabled = true;
 
   if (error.status === 401) {
-    window.location.replace('/');
+    window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
     return;
   }
 
@@ -206,7 +206,7 @@ function mostrarErroCarregamento(error) {
 
 function mostrarErroAcao(error) {
   if (error.status === 401) {
-    window.location.replace('/');
+    window.location.replace('/aluno/?next=' + encodeURIComponent(window.location.pathname + window.location.search));
     return;
   }
 
