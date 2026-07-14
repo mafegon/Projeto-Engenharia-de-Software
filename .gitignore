@@ -12,4 +12,5 @@ staticfiles/
 node_modules/
 .runserver.*
 .claude
+supabase/.temp/
 .agents

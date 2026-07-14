@@ -6,3 +6,7 @@ pip install -r requirements.txt
 python backend/manage.py tailwind install
 python backend/manage.py tailwind build
 python backend/manage.py collectstatic --no-input
+
+if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
+  python backend/manage.py migrate --no-input --fake-initial
+fi
