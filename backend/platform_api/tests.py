@@ -7,6 +7,7 @@ from django.test import Client, SimpleTestCase, override_settings
 from platform_api.repositories.memory import repository
 
 
+@override_settings(PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"])
 class PlatformApiTests(SimpleTestCase):
     def setUp(self):
         repository.reset()
@@ -296,6 +297,7 @@ class PlatformApiTests(SimpleTestCase):
             self.assertEqual(set(self.json(response)["error"]), {"code", "message"})
 
 
+@override_settings(PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"])
 class CompanyApiTests(SimpleTestCase):
     def setUp(self):
         repository.reset()
