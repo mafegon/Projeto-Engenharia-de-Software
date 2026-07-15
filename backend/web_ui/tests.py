@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from django.conf import settings
@@ -36,6 +37,29 @@ class WebUiRouteTests(SimpleTestCase):
         self.assertContains(response, 'href="/aluno/"')
         self.assertContains(response, 'href="/empresa/"')
         self.assertEqual(reverse("web_ui:landing"), "/")
+
+    def test_landing_only_keeps_access_links_in_the_main_ctas(self):
+        response = self.client.get("/")
+        source = response.content.decode()
+
+        self.assertNotIn("<nav", source)
+        self.assertNotIn("Sou aluno", source)
+        self.assertNotIn("Sou empresa", source)
+        self.assertNotIn("<footer", source)
+        self.assertNotIn("Acesso do aluno", source)
+        self.assertNotIn("Acesso da empresa", source)
+
+        student_cta = re.search(
+            r'<a href="/aluno/" class="([^"]+)">Entrar como aluno</a>',
+            source,
+        )
+        company_cta = re.search(
+            r'<a href="/empresa/" class="([^"]+)">Entrar como empresa</a>',
+            source,
+        )
+        self.assertIsNotNone(student_cta)
+        self.assertIsNotNone(company_cta)
+        self.assertEqual(student_cta.group(1), company_cta.group(1))
 
     def test_public_student_login_and_registration_page(self):
         response = self.client.get("/aluno/")
